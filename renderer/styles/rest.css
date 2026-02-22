@@ -93,3 +93,18 @@
     color: rgba(198, 168, 107, 0.18);
     letter-spacing: 1.5px;
 }
+
+/* ── Pause State ────────────────────────────────────── */
+body.paused #rest-screen .hourglass-wrap {
+    opacity: 0.4;
+    transition: opacity 0.3s var(--ease-gentle);
+}
+
+body.paused #rest-screen .rest-timer {
+    opacity: 0.4;
+    animation: pausePulse 2s ease-in-out infinite;
+}
+
+body.paused #rest-screen .rest-particle {
+    animation-play-state: paused;
+}

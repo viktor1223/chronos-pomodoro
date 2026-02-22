@@ -51,6 +51,7 @@ function updateDebugOverlay(elapsedMs, remainingMs, progress) {
     if (!overlay) return;
     overlay.textContent =
         'phase: ' + phase + '\n' +
+        'paused: ' + (pauseStartedAt > 0) + '\n' +
         'durationMs: ' + durationMs.toFixed(0) + '\n' +
         'elapsedMs: ' + elapsedMs.toFixed(0) + '\n' +
         'remainingMs: ' + remainingMs.toFixed(0) + '\n' +

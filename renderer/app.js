@@ -43,6 +43,7 @@ function startWork() {
     logDir = logDirInput ? logDirInput.value.trim() : '';
     sessionStartTime = new Date();
     sessionQuote = null;
+    document.body.classList.remove('paused');
 
     durationMs = workMinutes * 60 * 1000;
     startTimestamp = performance.now();
@@ -63,6 +64,7 @@ function startRest() {
     pausedAccumulatedMs = 0;
     pauseStartedAt = 0;
     phase = Phase.REST;
+    document.body.classList.remove('paused');
 
     const quote = getSessionQuote();
     const qEl = document.getElementById('rest-quote-text');
@@ -113,6 +115,44 @@ function stopTimer() {
     returnToSetup();
 }
 
+// ── Pause / Resume ─────────────────────────────────────
+function togglePause() {
+    if (phase !== Phase.WORK && phase !== Phase.REST) return;
+    if (pauseStartedAt > 0) {
+        resumeTimer();
+    } else {
+        pauseTimer();
+    }
+}
+
+function pauseTimer() {
+    pauseStartedAt = performance.now();
+    stopAnimationLoop();
+    // Visual feedback
+    document.body.classList.add('paused');
+    if (phase === Phase.WORK && workHourglass && workHourglass.sandStream) {
+        workHourglass.sandStream.style.opacity = '0';
+    }
+    if (phase === Phase.REST && restHourglass && restHourglass.sandStream) {
+        restHourglass.sandStream.style.opacity = '0';
+    }
+}
+
+function resumeTimer() {
+    if (pauseStartedAt > 0) {
+        pausedAccumulatedMs += performance.now() - pauseStartedAt;
+        pauseStartedAt = 0;
+    }
+    document.body.classList.remove('paused');
+    if (phase === Phase.WORK && workHourglass && workHourglass.sandStream) {
+        workHourglass.sandStream.style.opacity = '0.4';
+    }
+    if (phase === Phase.REST && restHourglass && restHourglass.sandStream) {
+        restHourglass.sandStream.style.opacity = '0.4';
+    }
+    startAnimationLoop();
+}
+
 // ── Initialize ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
     // Initialize hourglass components — single source for all screens
@@ -129,4 +169,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (workInput) {
         workInput.addEventListener('input', updateTimePreview);
     }
+
+    // Pause/resume — Space key
+    document.addEventListener('keydown', function (e) {
+        if (e.code === 'Space' && (phase === Phase.WORK || phase === Phase.REST)) {
+            e.preventDefault();
+            togglePause();
+        }
+    });
+
+    // Pause/resume — click hourglass
+    var workHg = document.getElementById('work-hourglass');
+    if (workHg) workHg.addEventListener('click', togglePause);
+    var restHg = document.getElementById('rest-hourglass');
+    if (restHg) restHg.addEventListener('click', togglePause);
 });

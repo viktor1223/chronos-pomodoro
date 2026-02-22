@@ -53,3 +53,30 @@
 .work-label {
     display: none;
 }
+
+/* ── Pause State ────────────────────────────────────── */
+.pause-indicator {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--text-gold);
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 0.3s var(--ease-gentle);
+    pointer-events: none;
+    margin-top: 2px;
+}
+
+body.paused .pause-indicator {
+    opacity: 0.6;
+    animation: pausePulse 2s ease-in-out infinite;
+}
+
+body.paused #work-screen .hourglass-wrap {
+    opacity: 0.5;
+    transition: opacity 0.3s var(--ease-gentle);
+}
+
+body.paused #work-screen .hourglass-glow {
+    animation: none;
+    opacity: 0.15;
+}

@@ -171,7 +171,7 @@ const EXPOSE_FUNCTIONS = [
     'returnToSetup', 'stopTimer', 'initVirtueSelector', 'browseLogDir',
     'saveReflectionAndFinish', 'skipReflection', 'clearReflectForm',
     'showWisdomWhisper', 'playChime', 'playRestComplete', 'getSessionQuote',
-    'updateDebugOverlay',
+    'updateDebugOverlay', 'togglePause', 'pauseTimer', 'resumeTimer',
 ];
 
 const EXPOSE_VARS = [
@@ -179,10 +179,12 @@ const EXPOSE_VARS = [
     'virtueRatings', 'virtueKeys', 'quotes', 'whispers',
     'debugVisible', 'settingsOpen', 'animatedProgress',
     'workHourglass', 'restHourglass', 'setupHourglass',
+    'pauseStartedAt', 'pausedAccumulatedMs',
 ];
 
 beforeEach(() => {
     jest.useFakeTimers();
+    document.body.classList.remove('paused');
     setupEnvironment();
 
     // Build a wrapper that executes both scripts and exposes symbols to globalThis
@@ -580,5 +582,137 @@ describe('Debug Overlay', () => {
         // Toggle off
         document.dispatchEvent(event);
         expect(overlay.style.display).toBe('none');
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+// 13. PAUSE / RESUME
+// ═══════════════════════════════════════════════════════
+
+describe('Pause / Resume', () => {
+    function enterWorkPhase() {
+        const workInput = document.getElementById('work-time');
+        workInput.value = '1'; // 1 minute for quick tests
+        window._setPerfTime(1000);
+        startWork();
+        // Don't runAllTimers — animation loop creates infinite setTimeout chain
+        stopAnimationLoop();
+    }
+
+    function enterRestPhase() {
+        enterWorkPhase();
+        window._setPerfTime(1000);
+        startRest();
+        stopAnimationLoop();
+    }
+
+    test('togglePause does nothing in IDLE phase', () => {
+        togglePause();
+        expect(document.body.classList.contains('paused')).toBe(false);
+    });
+
+    test('togglePause pauses during WORK phase', () => {
+        enterWorkPhase();
+        window._setPerfTime(5000);
+        togglePause();
+        // Check DOM side effects (closure vars aren't synced to globalThis)
+        expect(document.body.classList.contains('paused')).toBe(true);
+    });
+
+    test('togglePause resumes when already paused', () => {
+        enterWorkPhase();
+        window._setPerfTime(5000);
+        pauseTimer();
+        expect(document.body.classList.contains('paused')).toBe(true);
+
+        window._setPerfTime(8000);
+        resumeTimer();
+        stopAnimationLoop();
+        expect(document.body.classList.contains('paused')).toBe(false);
+        // Verify timer accounts for 3s pause via getTimerState
+        window._setPerfTime(9000);
+        const state = getTimerState();
+        // elapsed = 9000 - 1000(start) - 3000(paused) = 5000
+        expect(state.elapsedMs).toBe(5000);
+    });
+
+    test('paused time is excluded from timer state', () => {
+        enterWorkPhase();
+
+        // Run for 10s
+        window._setPerfTime(11000);
+        let state = getTimerState();
+        expect(state.elapsedMs).toBe(10000);
+
+        // Pause
+        pauseTimer();
+
+        // Advance 5s while paused
+        window._setPerfTime(16000);
+        state = getTimerState();
+        // Elapsed should still be 10000 because 5s is paused
+        expect(state.elapsedMs).toBe(10000);
+
+        // Resume
+        window._setPerfTime(16000);
+        resumeTimer();
+        stopAnimationLoop();
+
+        // Run 2 more seconds
+        window._setPerfTime(18000);
+        state = getTimerState();
+        // elapsed = 18000 - 1000 - 5000(paused) = 12000
+        expect(state.elapsedMs).toBe(12000);
+    });
+
+    test('pauseTimer adds paused class to body', () => {
+        enterWorkPhase();
+        pauseTimer();
+        expect(document.body.classList.contains('paused')).toBe(true);
+    });
+
+    test('resumeTimer removes paused class from body', () => {
+        enterWorkPhase();
+        window._setPerfTime(5000);
+        pauseTimer();
+        window._setPerfTime(8000);
+        resumeTimer();
+        stopAnimationLoop();
+        expect(document.body.classList.contains('paused')).toBe(false);
+    });
+
+    test('togglePause works during REST phase', () => {
+        enterRestPhase();
+        window._setPerfTime(3000);
+        togglePause();
+        expect(document.body.classList.contains('paused')).toBe(true);
+
+        window._setPerfTime(6000);
+        togglePause();
+        stopAnimationLoop();
+        expect(document.body.classList.contains('paused')).toBe(false);
+    });
+
+    test('Space key triggers togglePause during work', () => {
+        enterWorkPhase();
+        window._setPerfTime(2000);
+
+        const event = new KeyboardEvent('keydown', { code: 'Space' });
+        document.dispatchEvent(event);
+
+        expect(document.body.classList.contains('paused')).toBe(true);
+    });
+
+    test('togglePause does nothing in ALERT phase', () => {
+        // In IDLE, togglePause should be a no-op
+        togglePause();
+        expect(document.body.classList.contains('paused')).toBe(false);
+    });
+
+    test('pauseTimer stops animation loop', () => {
+        enterWorkPhase();
+        window._setPerfTime(2000);
+        pauseTimer();
+        expect(window.cancelAnimationFrame).toHaveBeenCalled();
     });
 });
