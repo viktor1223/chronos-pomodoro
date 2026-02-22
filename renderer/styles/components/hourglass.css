@@ -1,0 +1,49 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Hourglass Component
+   Size variants, glow effect, breathing animation
+   ═══════════════════════════════════════════════════════ */
+
+.hourglass-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hourglass-wrap svg {
+    width: 100%;
+    height: 100%;
+}
+
+.hourglass--sm {
+    width: 44px;
+    height: 66px;
+    opacity: 0.55;
+    animation: breathe 7s ease-in-out infinite;
+}
+
+.hourglass--md {
+    width: 80px;
+    height: 120px;
+    filter: drop-shadow(0 1px 6px rgba(198, 168, 107, 0.06));
+}
+
+.hourglass--lg {
+    width: 120px;
+    height: 180px;
+    filter: drop-shadow(0 2px 12px rgba(198, 168, 107, 0.04));
+}
+
+@keyframes breathe {
+
+    0%,
+    100% {
+        opacity: 0.50;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 0.72;
+        transform: translateY(-4px);
+    }
+}

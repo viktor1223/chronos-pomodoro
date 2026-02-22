@@ -1,0 +1,61 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Complete Screen
+   Session complete — laurel, title, saved note
+   ═══════════════════════════════════════════════════════ */
+
+#complete-screen {
+    background: radial-gradient(ellipse at center,
+            rgba(20, 18, 14, 0.97) 0%,
+            rgba(6, 5, 3, 1) 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.complete-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: contentReveal 0.8s var(--ease-spring) forwards;
+    padding: 48px 52px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 0.5px solid rgba(255, 255, 255, 0.035);
+    border-radius: var(--radius-outer);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.06),
+        0 12px 36px rgba(0, 0, 0, 0.12);
+}
+
+.complete-laurel-svg {
+    width: 80px;
+    height: 80px;
+    animation: laurelGlow 6s ease-in-out infinite;
+}
+
+.complete-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 30px;
+    color: var(--text-gold);
+    letter-spacing: 4px;
+}
+
+.complete-subtitle {
+    font-family: var(--font-display);
+    font-size: 13px;
+    color: var(--text-secondary);
+    letter-spacing: 0.4px;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.complete-saved-note {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: rgba(198, 168, 107, 0.22);
+    letter-spacing: 0.3px;
+    text-align: center;
+}

@@ -1,0 +1,22 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Debug Overlay
+   Fixed overlay for development diagnostics
+   ═══════════════════════════════════════════════════════ */
+
+#debug-overlay {
+    position: fixed;
+    top: 8px;
+    right: 8px;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.75);
+    color: rgba(0, 255, 136, 0.9);
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+    font-size: 10px;
+    line-height: 1.5;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 0.5px solid rgba(0, 255, 136, 0.2);
+    pointer-events: none;
+    white-space: pre;
+    margin: 0;
+}

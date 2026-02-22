@@ -1,0 +1,55 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Work Screen
+   Silent Desktop Widget — shadow-only, no border
+   ═══════════════════════════════════════════════════════ */
+
+#work-screen {
+    background: rgba(26, 26, 28, 0.50);
+    border-radius: 28px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(60px) saturate(1.4) brightness(1.02);
+    -webkit-backdrop-filter: blur(60px) saturate(1.4) brightness(1.02);
+    border: none;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        0 4px 12px rgba(0, 0, 0, 0.08),
+        0 12px 36px rgba(0, 0, 0, 0.10);
+    overflow: hidden;
+}
+
+.work-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 10px;
+    cursor: default;
+}
+
+.hourglass-glow {
+    position: absolute;
+    inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(198, 168, 107, 0.04) 0%, transparent 70%);
+    pointer-events: none;
+    animation: glowPulse 7s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.3;
+    }
+
+    50% {
+        opacity: 0.65;
+    }
+}
+
+/* Work label — hidden. Silent companion. */
+.work-label {
+    display: none;
+}
