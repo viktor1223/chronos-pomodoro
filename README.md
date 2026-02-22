@@ -251,6 +251,3 @@ screens → settings → particles → virtue → reflection → wisdom → app
 
 Each module defines its exports as top-level `var`, `let`, `const`, or `function` declarations in the global scope.
 
-## License
-
-MIT
