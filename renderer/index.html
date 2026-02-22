@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- SETUP SCREEN — Ritual Entry                     -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="setup-screen" class="screen active">
+        <div class="window-controls">
+            <button class="wc-btn wc-close" onclick="window.electronAPI.closeWindow()"></button>
+            <button class="wc-btn wc-minimize" onclick="window.electronAPI.minimizeWindow()"></button>
+        </div>
+
+        <!-- Gear toggle — top right -->
+        <button class="settings-toggle" id="settings-toggle" onclick="toggleSettings()" title="Settings">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round">
+                <circle cx="12" cy="12" r="3" />
+                <path
+                    d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+            </svg>
+        </button>
+
+        <div class="setup-content">
+            <h1 class="app-title">Chronos</h1>
+
+            <div class="logo-area">
+                <div id="setup-hourglass"></div>
+            </div>
+
+            <p class="time-preview" id="time-preview">25 minutes</p>
+
+            <button class="btn-primary" onclick="startWork()">Begin</button>
+
+            <p class="wisdom-whisper" id="wisdom-whisper"></p>
+        </div>
+
+        <!-- Settings drawer (collapsed by default) -->
+        <div class="settings-drawer" id="settings-drawer">
+            <div class="settings-inner">
+                <div class="input-group">
+                    <label for="work-time">
+                        <span class="label-icon">⏱</span>
+                        Work
+                    </label>
+                    <div class="input-wrapper">
+                        <button class="spin-btn" onclick="adjustTime('work-time', -1)">−</button>
+                        <input type="number" id="work-time" value="25" min="0.1" max="120" step="0.1">
+                        <button class="spin-btn" onclick="adjustTime('work-time', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="rest-time">
+                        <span class="label-icon">☽</span>
+                        Rest
+                    </label>
+                    <div class="input-wrapper">
+                        <button class="spin-btn" onclick="adjustTime('rest-time', -0.5)">−</button>
+                        <input type="number" id="rest-time" value="5" min="0.1" max="60" step="0.1">
+                        <button class="spin-btn" onclick="adjustTime('rest-time', 0.5)">+</button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="log-dir">
+                        <span class="label-icon">📂</span>
+                        Log directory
+                    </label>
+                    <div class="input-wrapper path-wrapper">
+                        <input type="text" id="log-dir" placeholder="~/Documents/chronos-logs" class="path-input">
+                        <button class="spin-btn browse-btn" onclick="browseLogDir()" title="Browse">…</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- WORK SCREEN — Silent Companion Widget           -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="work-screen" class="screen">
+        <div class="work-content" ondblclick="window.electronAPI.minimizeWindow()">
+            <div id="work-hourglass"></div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- ALERT SCREEN — Earned Rest (Quote as Reward)    -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="alert-screen" class="screen">
+        <div class="alert-columns">
+            <div class="column-ornament left"></div>
+            <div class="column-ornament right"></div>
+        </div>
+
+        <div class="alert-content">
+            <div class="laurel-wreath">
+                <svg viewBox="0 0 200 200" class="laurel-svg">
+                    <g opacity="0.5">
+                        <path d="M60 160 Q40 130 50 100 Q55 85 65 75" fill="none" stroke="#C6A86B" stroke-width="1.5" />
+                        <ellipse cx="48" cy="125" rx="7" ry="14" transform="rotate(-20 48 125)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                        <ellipse cx="50" cy="105" rx="6" ry="12" transform="rotate(-15 50 105)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                        <ellipse cx="55" cy="88" rx="6" ry="11" transform="rotate(-5 55 88)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                        <ellipse cx="62" cy="75" rx="5" ry="9" transform="rotate(5 62 75)" fill="rgba(198,168,107,0.12)"
+                            stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                    </g>
+                    <g opacity="0.5">
+                        <path d="M140 160 Q160 130 150 100 Q145 85 135 75" fill="none" stroke="#C6A86B"
+                            stroke-width="1.5" />
+                        <ellipse cx="152" cy="125" rx="7" ry="14" transform="rotate(20 152 125)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                        <ellipse cx="150" cy="105" rx="6" ry="12" transform="rotate(15 150 105)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                        <ellipse cx="145" cy="88" rx="6" ry="11" transform="rotate(5 145 88)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                        <ellipse cx="138" cy="75" rx="5" ry="9" transform="rotate(-5 138 75)"
+                            fill="rgba(198,168,107,0.12)" stroke="rgba(198,168,107,0.30)" stroke-width="0.8" />
+                    </g>
+                </svg>
+            </div>
+
+            <h1 class="alert-title">Time to Rest</h1>
+            <p class="alert-subtitle">Your work is done. The wise know when to pause.</p>
+
+            <div class="alert-quote">
+                <p id="philosophy-quote"></p>
+                <span class="quote-author" id="quote-author"></span>
+            </div>
+
+            <button class="btn-rest" onclick="startRest()">
+                <span class="btn-rest-icon">☽</span>
+                Rest
+            </button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- REST SCREEN — Contemplation                     -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="rest-screen" class="screen">
+        <div class="rest-content">
+            <div class="rest-particles" id="rest-particles"></div>
+
+            <div id="rest-hourglass"></div>
+
+            <p class="rest-timer" id="rest-timer-display">5:00</p>
+
+            <div class="rest-quote">
+                <p id="rest-quote-text"></p>
+                <span class="rest-quote-author" id="rest-quote-author"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- REFLECT SCREEN — Post-session Journal           -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="reflect-screen" class="screen">
+        <div class="reflect-content">
+            <h1 class="reflect-title">Reflect</h1>
+            <p class="reflect-subtitle">A moment of clarity before you move on.</p>
+
+            <div class="reflect-form">
+                <div class="reflect-group">
+                    <label for="reflect-task">What did you work on?</label>
+                    <textarea id="reflect-task" rows="2" placeholder="Describe what you focused on…"></textarea>
+                </div>
+
+                <div class="reflect-group">
+                    <label>How did you practice virtue?</label>
+                    <div class="virtue-selector" id="virtue-selector">
+                        <div class="virtue-row">
+                            <div class="virtue-label">
+                                <span class="virtue-name">Areté</span>
+                                <span class="virtue-desc">Excellence</span>
+                            </div>
+                            <div class="virtue-dots">
+                                <button class="virtue-dot" data-virtue="arete" data-value="1">1</button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="2">2</button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="3">3</button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="4">4</button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="5">5</button>
+                            </div>
+                        </div>
+                        <div class="virtue-row">
+                            <div class="virtue-label">
+                                <span class="virtue-name">Sophrosyne</span>
+                                <span class="virtue-desc">Temperance</span>
+                            </div>
+                            <div class="virtue-dots">
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="1">1</button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="2">2</button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="3">3</button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="4">4</button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="5">5</button>
+                            </div>
+                        </div>
+                        <div class="virtue-row">
+                            <div class="virtue-label">
+                                <span class="virtue-name">Andreia</span>
+                                <span class="virtue-desc">Courage</span>
+                            </div>
+                            <div class="virtue-dots">
+                                <button class="virtue-dot" data-virtue="andreia" data-value="1">1</button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="2">2</button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="3">3</button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="4">4</button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="5">5</button>
+                            </div>
+                        </div>
+                        <div class="virtue-row">
+                            <div class="virtue-label">
+                                <span class="virtue-name">Dikaiosyne</span>
+                                <span class="virtue-desc">Justice</span>
+                            </div>
+                            <div class="virtue-dots">
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="1">1</button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="2">2</button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="3">3</button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="4">4</button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="5">5</button>
+                            </div>
+                        </div>
+                        <div class="virtue-row">
+                            <div class="virtue-label">
+                                <span class="virtue-name">Phronesis</span>
+                                <span class="virtue-desc">Practical Wisdom</span>
+                            </div>
+                            <div class="virtue-dots">
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="1">1</button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="2">2</button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="3">3</button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="4">4</button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="5">5</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reflect-group">
+                    <label for="reflect-notes">Notes</label>
+                    <textarea id="reflect-notes" rows="3" placeholder="Anything on your mind…"></textarea>
+                </div>
+            </div>
+
+            <div class="reflect-actions">
+                <button class="btn-primary" onclick="saveReflectionAndFinish()">Save</button>
+                <button class="btn-skip" onclick="skipReflection()">Skip</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- COMPLETE SCREEN                                 -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <div id="complete-screen" class="screen">
+        <div class="complete-content">
+            <div class="complete-laurel">
+                <svg viewBox="0 0 120 120" class="complete-laurel-svg">
+                    <g opacity="0.4">
+                        <path d="M30 90 Q20 65 35 45" fill="none" stroke="#C6A86B" stroke-width="1.5" />
+                        <ellipse cx="27" cy="72" rx="5" ry="10" transform="rotate(-15 27 72)"
+                            fill="rgba(198,168,107,0.10)" stroke="rgba(198,168,107,0.25)" stroke-width="0.8" />
+                        <ellipse cx="32" cy="55" rx="4" ry="9" transform="rotate(-5 32 55)"
+                            fill="rgba(198,168,107,0.10)" stroke="rgba(198,168,107,0.25)" stroke-width="0.8" />
+                    </g>
+                    <g opacity="0.4">
+                        <path d="M90 90 Q100 65 85 45" fill="none" stroke="#C6A86B" stroke-width="1.5" />
+                        <ellipse cx="93" cy="72" rx="5" ry="10" transform="rotate(15 93 72)"
+                            fill="rgba(198,168,107,0.10)" stroke="rgba(198,168,107,0.25)" stroke-width="0.8" />
+                        <ellipse cx="88" cy="55" rx="4" ry="9" transform="rotate(5 88 55)" fill="rgba(198,168,107,0.10)"
+                            stroke="rgba(198,168,107,0.25)" stroke-width="0.8" />
+                    </g>
+                    <text x="60" y="75" text-anchor="middle" font-size="32" fill="rgba(198,168,107,0.5)">✦</text>
+                </svg>
+            </div>
+
+            <h1 class="complete-title">Well Done</h1>
+            <p class="complete-subtitle">Return to your purpose.</p>
+            <p class="complete-saved-note" id="complete-saved-note"></p>
+
+            <button class="btn-primary" onclick="returnToSetup()">Begin Again</button>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════ -->
+    <!-- DEBUG OVERLAY — Cmd+D to toggle               -->
+    <!-- ═══════════════════════════════════════════════ -->
+    <pre id="debug-overlay" style="display:none"></pre>
+
+    <script src="hourglass.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
