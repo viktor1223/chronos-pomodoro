@@ -1,0 +1,130 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Setup Screen
+   Settings toggle, settings drawer, setup content
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Settings Toggle — Gear icon, top-right ──────────── */
+.settings-toggle {
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.4s var(--ease-spring);
+    z-index: 100;
+    padding: 0;
+}
+
+.settings-toggle:hover {
+    color: var(--text-gold);
+    background: rgba(198, 168, 107, 0.06);
+}
+
+.settings-toggle.active {
+    color: var(--text-gold);
+    transform: rotate(60deg);
+}
+
+/* ── Settings Drawer — Collapses below hero ──────────── */
+.settings-drawer {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.45s var(--ease-spring),
+        opacity 0.35s var(--ease-gentle);
+}
+
+.settings-drawer.open {
+    max-height: 280px;
+    opacity: 1;
+}
+
+.settings-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 32px 20px;
+}
+
+/* ── Setup Screen ────────────────────────────────────── */
+#setup-screen {
+    background: var(--glass-bg);
+    border-radius: var(--radius-outer);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(60px) saturate(1.5) brightness(1.04);
+    -webkit-backdrop-filter: blur(60px) saturate(1.5) brightness(1.04);
+    border: 0.5px solid var(--glass-border);
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.06),
+        0 6px 20px rgba(0, 0, 0, 0.10),
+        0 18px 50px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+/* Ambient highlight — barely visible refraction */
+#setup-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
+    height: 0.5px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.10), transparent);
+    z-index: 1;
+}
+
+.setup-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 32px;
+    gap: 16px;
+    width: 100%;
+}
+
+/* ── Title ──────────────────────────────────────────── */
+.app-title {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: 22px;
+    letter-spacing: 8px;
+    color: var(--text-gold);
+    text-transform: uppercase;
+}
+
+/* ── Hourglass hero ─────────────────────────────────── */
+.logo-area {
+    margin-bottom: 2px;
+}
+
+/* ── Time preview ───────────────────────────────────── */
+.time-preview {
+    font-family: var(--font-ui);
+    font-weight: 200;
+    font-size: 16px;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+}
+
+/* ── Wisdom whisper ─────────────────────────────────── */
+.wisdom-whisper {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 11px;
+    color: var(--text-gold-whisper);
+    letter-spacing: 0.5px;
+    min-height: 16px;
+    text-align: center;
+}

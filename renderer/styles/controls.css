@@ -1,0 +1,165 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Controls
+   Buttons, input wrappers, spin buttons
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Input Groups ───────────────────────────────────── */
+.input-group {
+    width: 100%;
+    max-width: 220px;
+}
+
+.input-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.label-icon {
+    font-size: 10px;
+    opacity: 0.5;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 0.5px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-control);
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: inset 0 0.5px 1px rgba(0, 0, 0, 0.08);
+}
+
+.input-wrapper:focus-within {
+    border-color: rgba(198, 168, 107, 0.25);
+    box-shadow:
+        inset 0 0.5px 1px rgba(0, 0, 0, 0.06),
+        0 0 0 2px rgba(198, 168, 107, 0.05);
+}
+
+.spin-btn {
+    width: 34px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    color: var(--text-gold);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-control);
+}
+
+.spin-btn:hover {
+    background: rgba(198, 168, 107, 0.06);
+}
+
+.spin-btn:active {
+    transform: scale(0.92);
+}
+
+.input-group input {
+    flex: 1;
+    height: 36px;
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-family: var(--font-ui);
+    font-size: 17px;
+    font-weight: 300;
+    color: var(--text-primary);
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.input-group input::-webkit-inner-spin-button,
+.input-group input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* ── Primary Button — Matte Gold Outline ────────────── */
+.btn-primary {
+    margin-top: 8px;
+    padding: 10px 36px;
+    background: transparent;
+    border: 0.5px solid rgba(198, 168, 107, 0.30);
+    border-radius: 50px;
+    color: var(--text-gold);
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s var(--ease-spring);
+    text-transform: uppercase;
+}
+
+.btn-primary:hover {
+    background: rgba(198, 168, 107, 0.06);
+    border-color: rgba(198, 168, 107, 0.45);
+    box-shadow: 0 0 20px rgba(198, 168, 107, 0.06);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* ── Rest Button — Matte Outline ─────────────────────── */
+.btn-rest {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 40px;
+    background: transparent;
+    border: 0.5px solid rgba(198, 168, 107, 0.25);
+    border-radius: 50px;
+    color: var(--text-gold);
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.4s var(--ease-spring);
+    text-transform: uppercase;
+}
+
+.btn-rest:hover {
+    background: rgba(198, 168, 107, 0.06);
+    border-color: rgba(198, 168, 107, 0.40);
+    box-shadow: 0 0 20px rgba(198, 168, 107, 0.06);
+    transform: translateY(-1px);
+}
+
+.btn-rest-icon {
+    font-size: 16px;
+    opacity: 0.5;
+}
+
+/* ── Skip Button ────────────────────────────────────── */
+.btn-skip {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 4px 12px;
+}
+
+.btn-skip:hover {
+    color: var(--text-primary);
+}

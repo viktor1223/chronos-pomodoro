@@ -1,0 +1,95 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Rest Screen
+   Contemplation — particles, timer, quote
+   ═══════════════════════════════════════════════════════ */
+
+#rest-screen {
+    background: radial-gradient(ellipse at 50% 30%,
+            rgba(20, 18, 14, 0.97) 0%,
+            rgba(10, 8, 6, 0.99) 60%,
+            rgba(3, 2, 1, 1) 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.rest-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 40px;
+    position: relative;
+    z-index: 1;
+    animation: contentReveal 0.8s var(--ease-spring) forwards;
+}
+
+.rest-particles {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.rest-particle {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    background: rgba(198, 168, 107, 0.14);
+    border-radius: 50%;
+    animation: particleFloat linear infinite;
+}
+
+@keyframes particleFloat {
+    from {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.45;
+    }
+
+    90% {
+        opacity: 0.3;
+    }
+
+    to {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+}
+
+/* Rest timer — system font, ultralight, white (not gold) */
+.rest-timer {
+    font-family: var(--font-ui);
+    font-weight: 200;
+    font-size: 72px;
+    color: var(--text-primary);
+    letter-spacing: 4px;
+    line-height: 1;
+}
+
+.rest-quote {
+    text-align: center;
+    max-width: 440px;
+    padding: 12px 0;
+    margin-top: 4px;
+}
+
+.rest-quote p {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.22);
+    margin-bottom: 4px;
+}
+
+.rest-quote-author {
+    font-family: var(--font-display);
+    font-size: 10px;
+    color: rgba(198, 168, 107, 0.18);
+    letter-spacing: 1.5px;
+}

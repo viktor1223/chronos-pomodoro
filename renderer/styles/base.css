@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════════════════
+   CHRONOS — Base Styles
+   Reset, CSS variables, typography, screen base, animations
+   ═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+
+:root {
+    /* ── Typography ─────────────────────────────────── */
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-ui: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, 'Helvetica Neue', sans-serif;
+
+    /* ── Palette — Museum brass on warm black ──────── */
+    --gold: #C6A86B;
+    --gold-rgb: 198, 168, 107;
+    --surface: #1A1A1C;
+    --surface-raised: rgba(255, 255, 255, 0.045);
+
+    /* ── Text hierarchy ────────────────────────────── */
+    --text-primary: rgba(255, 255, 255, 0.90);
+    --text-secondary: rgba(255, 255, 255, 0.45);
+    --text-tertiary: rgba(255, 255, 255, 0.22);
+    --text-gold: rgba(198, 168, 107, 0.82);
+    --text-gold-whisper: rgba(198, 168, 107, 0.20);
+
+    /* ── Glass ──────────────────────────────────────── */
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-border: rgba(255, 255, 255, 0.07);
+    --glass-highlight: rgba(255, 255, 255, 0.10);
+
+    /* ── Layout ─────────────────────────────────────── */
+    --radius-outer: 24px;
+    --radius-inner: 16px;
+    --radius-control: 12px;
+
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-gentle: cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: 0.3s var(--ease-gentle);
+}
+
+/* ── Reset ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-ui);
+    color: var(--text-primary);
+    background: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+}
+
+/* ── Scrollbar — invisible ──────────────────────────── */
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* ── Screens ────────────────────────────────────────── */
+.screen {
+    position: absolute;
+    inset: 0;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-spring);
+}
+
+.screen.active {
+    display: flex;
+    opacity: 1;
+    animation: fadeIn 0.5s var(--ease-spring) forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes contentReveal {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ── Responsive ─────────────────────────────────────── */
+@media (min-width: 800px) {
+    .alert-title {
+        font-size: 48px;
+    }
+
+    .alert-subtitle {
+        font-size: 17px;
+    }
+
+    .rest-timer {
+        font-size: 84px;
+    }
+}
