@@ -63,6 +63,11 @@ function enterWorkMode() {
     mainWindow.setPosition(screenWidth - 160, screenHeight - 200);
     mainWindow.setResizable(false);
     mainWindow.setMinimizable(true);
+
+    // Fully transparent widget — no vibrancy, no shadow
+    mainWindow.setVibrancy(null);
+    mainWindow.setHasShadow(false);
+    mainWindow.setBackgroundColor('#00000000');
     isWorkMode = true;
 }
 
@@ -132,6 +137,10 @@ function returnToSetup() {
     mainWindow.setResizable(true);
     mainWindow.setSize(320, 460);
     mainWindow.setPosition(screenWidth - 340, screenHeight - 480);
+
+    // Restore glass appearance for setup screen
+    mainWindow.setVibrancy('under-window');
+    mainWindow.setHasShadow(true);
 }
 
 module.exports = {

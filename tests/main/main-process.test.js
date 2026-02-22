@@ -28,6 +28,9 @@ const mockWindow = {
     show: jest.fn(),
     loadFile: jest.fn(),
     on: jest.fn(),
+    setVibrancy: jest.fn(),
+    setHasShadow: jest.fn(),
+    setBackgroundColor: jest.fn(),
 };
 
 const ipcHandlers = {};

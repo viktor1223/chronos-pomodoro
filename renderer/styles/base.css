@@ -106,8 +106,15 @@ body {
 
 /* ── Pause animation ────────────────────────────────── */
 @keyframes pausePulse {
-    0%, 100% { opacity: 0.4; }
-    50% { opacity: 0.8; }
+
+    0%,
+    100% {
+        opacity: 0.4;
+    }
+
+    50% {
+        opacity: 0.8;
+    }
 }
 
 /* ── Responsive ─────────────────────────────────────── */
