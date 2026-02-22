@@ -1,17 +1,3 @@
----
-title: Chronos Pomodoro Timer
-description: A macOS desktop Pomodoro timer built with Electron, featuring Greek philosophy aesthetics, animated SVG hourglass, and reflective journaling
-author: Viktor Ciroski
-ms.date: 2026-02-22
-ms.topic: overview
-keywords:
-  - pomodoro
-  - electron
-  - macos
-  - productivity
-  - greek philosophy
----
-
 # Chronos Pomodoro Timer
 
 A macOS desktop Pomodoro timer built with Electron. Chronos pairs the Pomodoro technique with Greek philosophy — an animated SVG hourglass tracks your session while Stoic quotes and virtue check-ins encourage deliberate work.
