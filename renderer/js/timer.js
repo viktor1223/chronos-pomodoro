@@ -23,10 +23,12 @@ function animationLoop(timestamp) {
         return;
     }
 
+    // Frame delta — compute BEFORE updating lastFrameTime
+    const frameDt = lastFrameTime > 0 ? Math.min(timestamp - lastFrameTime, 50) : 16;
+
     // FPS calculation
     if (lastFrameTime > 0) {
-        const frameDelta = timestamp - lastFrameTime;
-        fpsAccum += frameDelta;
+        fpsAccum += frameDt;
         frameCount++;
         if (fpsAccum > 500) {
             currentFps = (frameCount / fpsAccum) * 1000;
@@ -39,7 +41,6 @@ function animationLoop(timestamp) {
     const { elapsedMs, remainingMs, progress } = getTimerState();
 
     // Critically-damped interpolation (~200ms response time)
-    const frameDt = lastFrameTime > 0 ? Math.min(timestamp - lastFrameTime, 50) : 16;
     const alpha = 1 - Math.exp(-frameDt / 200);
     if (animatedProgress === 0 && progress > 0) {
         animatedProgress = progress;
