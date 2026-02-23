@@ -220,16 +220,16 @@ Sounds are generated with the Web Audio API — no external audio files:
 | Token              | Value                          | Usage                    |
 |--------------------|--------------------------------|--------------------------|
 | `--gold`           | `#C6A86B`                      | Primary accent           |
-| `--text-primary`   | `rgba(255, 255, 255, 0.88)`    | Body text                |
-| `--text-secondary` | `rgba(255, 255, 255, 0.40)`    | Labels, hints            |
-| `--text-gold`      | `rgba(201, 168, 76, 0.85)`     | Titles, buttons          |
-| `--glass-bg`       | `rgba(255, 255, 255, 0.045)`   | Surface background       |
-| `--glass-border`   | `rgba(255, 255, 255, 0.08)`    | Surface edge             |
+| `--text-primary`   | `rgba(255, 255, 255, 0.90)`    | Body text                |
+| `--text-secondary` | `rgba(255, 255, 255, 0.45)`    | Labels, hints            |
+| `--text-gold`      | `rgba(198, 168, 107, 0.82)`    | Titles, buttons          |
+| `--glass-bg`       | `rgba(255, 255, 255, 0.04)`    | Surface background       |
+| `--glass-border`   | `rgba(255, 255, 255, 0.07)`    | Surface edge             |
 
 ### Typography
 
 * **Display / titles:** Cormorant Garamond, weight 300, letter-spacing 4–8 px
-* **Body / labels:** Cormorant Garamond or system sans-serif (SF Pro Display fallback)
+* **Body / labels:** System sans-serif (SF Pro Text, SF Pro Display, Helvetica Neue fallback)
 * **Debug overlay:** System monospace
 
 ### Visuals
@@ -246,8 +246,8 @@ The test suite uses Jest v30+ with two project environments:
 
 | Project    | Environment | Tests | Coverage target                    |
 |------------|-------------|-------|------------------------------------|
-| `renderer` | jsdom       | 87    | Functions, state transitions, pause |
-| `main`     | node        | 60    | IPC routing, window manager        |
+| `renderer` | jsdom       | 96    | Functions, state transitions, pause |
+| `main`     | node        | 51    | IPC routing, window manager        |
 
 **Test strategy:** Renderer source files are concatenated and evaluated via `new Function().call(window)` with a `globalThis` export wrapper, giving tests direct access to all 28 functions and 14 state variables without an ES module loader.
 
