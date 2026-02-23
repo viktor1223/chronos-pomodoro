@@ -48,6 +48,15 @@ Tests run across two Jest projects (renderer via jsdom, main via Node) with HTML
 npm run test:report   # run tests and print report paths
 ```
 
+### Build as a native macOS app
+
+```bash
+npm run build         # produces dist/mac-arm64/Chronos.app and a DMG installer
+npm run build:dir     # produces only the .app (faster, skips DMG)
+```
+
+After building, drag `Chronos.app` from `dist/mac-arm64/` into `/Applications` (or open the DMG and drag from there). The app appears in your Dock with a custom hourglass icon.
+
 ## Architecture
 
 Chronos follows a modular Electron architecture with clear separation between main process, preload bridge, and renderer.
@@ -56,6 +65,9 @@ Chronos follows a modular Electron architecture with clear separation between ma
 
 ```text
 chronos-pomodoro/
+├── build/                       # App packaging assets
+│   ├── icon.svg                 # Source hourglass icon (1024×1024 SVG)
+│   └── icon.icns                # macOS app icon (all required sizes)
 ├── main/                        # Main process (Node.js)
 │   ├── index.js                 # App lifecycle: whenReady, quit, activate
 │   ├── window-manager.js        # Window state machine: sizes, positions, modes
