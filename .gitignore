@@ -3,3 +3,6 @@ node_modules/
 *.log
 test-report/
 .copilot-tracking/
+dist/
+build/icon.iconset/
+build/icon_1024.png

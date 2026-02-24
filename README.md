@@ -42,6 +42,12 @@ npm start
 npm test
 ```
 
+For development with DevTools:
+
+```bash
+npm run dev
+```
+
 Tests run across two Jest projects (renderer via jsdom, main via Node) with HTML reporting and Istanbul coverage. The report is written to `test-report/index.html`.
 
 ```bash
@@ -107,9 +113,9 @@ chronos-pomodoro/
 ├── tests/                       # Jest test suites
 │   ├── renderer/                # jsdom environment
 │   │   ├── app-logic.test.js    # 51 tests — core app logic + pause/resume
-│   │   └── hourglass.test.js    # 36 tests — hourglass component
+│   │   └── hourglass.test.js    # 45 tests — hourglass component
 │   └── main/                    # Node environment
-│       ├── main-process.test.js # 49 tests — main process modules
+│       ├── main-process.test.js # 40 tests — main process modules
 │       └── preload.test.js      # 11 tests — preload bridge
 ├── jest.config.js               # Multi-project Jest configuration
 └── package.json
@@ -210,7 +216,7 @@ Each saved reflection writes two files to the user-specified log directory:
 
 Sounds are generated with the Web Audio API — no external audio files:
 
-* **Work complete chime** — Three ascending tones (523 → 659 → 1046 Hz) with gain envelopes
+* **Work complete chime** — Four ascending tones (523 → 659 → 784 → 1047 Hz) with gain envelopes
 * **Rest complete** — Four-note resolution chord with staggered attack
 
 ## Design system
@@ -234,9 +240,9 @@ Sounds are generated with the Web Audio API — no external audio files:
 
 ### Visuals
 
-* macOS vibrancy (`under-window`) with `visualEffectState: 'active'` on setup, alert, rest, reflect, and complete screens
+* macOS vibrancy (`under-window`) with `visualEffectState: 'active'` on the setup screen; vibrancy is disabled during work mode and restored when returning to setup
 * Work widget disables vibrancy and window shadow for a fully transparent background — the hourglass floats directly on the desktop with no visible outline
-* `backdrop-filter: blur(60px) saturate(1.5) brightness(1.04)` on glass surfaces (setup, alert, reflect, complete)
+* `backdrop-filter: blur(60px) saturate(1.5) brightness(1.04)` on the setup screen; alert, reflect, and complete content panels use `blur(40px)`
 * Gold radial glow behind the work hourglass, appearing on hover with a 7 s ease-in-out pulse
 * Ambient gold particles (30 elements, randomized size and duration) on the rest screen
 
@@ -249,7 +255,7 @@ The test suite uses Jest v30+ with two project environments:
 | `renderer` | jsdom       | 96    | Functions, state transitions, pause |
 | `main`     | node        | 51    | IPC routing, window manager        |
 
-**Test strategy:** Renderer source files are concatenated and evaluated via `new Function().call(window)` with a `globalThis` export wrapper, giving tests direct access to all 28 functions and 14 state variables without an ES module loader.
+**Test strategy:** Renderer source files are concatenated and evaluated via `new Function().call(window)` with a `globalThis` export wrapper, giving tests direct access to all 28 functions and 19 state declarations without an ES module loader.
 
 Run with coverage:
 
