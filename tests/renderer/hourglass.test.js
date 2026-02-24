@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const hourglassSource = fs.readFileSync(
     path.join(__dirname, '../../renderer/hourglass.js'),
-    'utf8'
+    'utf8',
 );
 
 let Hourglass;
@@ -172,9 +172,9 @@ describe('Hourglass — Top Sand Path (_topSandPath)', () => {
 
     test('at p=0 starts at y=14 (full sand)', () => {
         const d = hg._topSandPath(0);
-        expect(d).toContain('M22 14');    // top edge at SAND_TOP
-        expect(d).toContain('L58 58');    // extends to neck
-        expect(d).toContain('L22 58 Z');  // closes path
+        expect(d).toContain('M22 14'); // top edge at SAND_TOP
+        expect(d).toContain('L58 58'); // extends to neck
+        expect(d).toContain('L22 58 Z'); // closes path
     });
 
     test('at p=1 returns degenerate empty path', () => {
@@ -278,13 +278,13 @@ describe('Hourglass — updateSand()', () => {
     test('clamps progress below 0 to 0', () => {
         hg.updateSand(-0.5);
         const d = hg.topSand.getAttribute('d');
-        expect(d).toContain('M22 14');  // same as p=0
+        expect(d).toContain('M22 14'); // same as p=0
     });
 
     test('clamps progress above 1 to 1', () => {
         hg.updateSand(1.5);
         const d = hg.topSand.getAttribute('d');
-        expect(d).toBe('M22 58 L58 58 Z');  // same as p=1
+        expect(d).toBe('M22 58 L58 58 Z'); // same as p=1
     });
 
     test('hides sand stream when progress >= 0.98', () => {

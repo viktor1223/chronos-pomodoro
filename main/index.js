@@ -6,10 +6,22 @@
 const { app, BrowserWindow } = require('electron');
 const windowManager = require('./window-manager');
 const ipcHandlers = require('./ipc-handlers');
+const { createAppMenu } = require('./app-menu');
+const tray = require('./tray');
 
 ipcHandlers.registerIpcHandlers();
 
-app.whenReady().then(windowManager.createWindow);
+app.whenReady().then(() => {
+    createAppMenu();
+    windowManager.createWindow();
+    tray.createTray(windowManager);
+
+    // Handle --dev flag to open DevTools
+    if (process.argv.includes('--dev')) {
+        const win = windowManager.getMainWindow();
+        if (win) win.webContents.openDevTools({ mode: 'detach' });
+    }
+});
 
 app.on('window-all-closed', () => {
     app.quit();

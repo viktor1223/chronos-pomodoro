@@ -16,8 +16,12 @@ async function browseLogDir() {
 }
 
 async function saveReflectionAndFinish() {
-    const task = document.getElementById('reflect-task') ? document.getElementById('reflect-task').value : '';
-    const notes = document.getElementById('reflect-notes') ? document.getElementById('reflect-notes').value : '';
+    const task = document.getElementById('reflect-task')
+        ? document.getElementById('reflect-task').value
+        : '';
+    const notes = document.getElementById('reflect-notes')
+        ? document.getElementById('reflect-notes').value
+        : '';
 
     if (logDir) {
         const result = await window.electronAPI.saveReflection({
@@ -40,6 +44,11 @@ async function saveReflectionAndFinish() {
     clearReflectForm();
     phase = Phase.COMPLETE;
     showScreen('complete-screen');
+
+    // Track session completion
+    window.electronAPI.incrementSession().then(function (stats) {
+        if (stats) updateSessionStats(stats.total, stats.today);
+    });
 }
 
 function skipReflection() {
@@ -48,6 +57,11 @@ function skipReflection() {
     if (savedNote) savedNote.textContent = '';
     phase = Phase.COMPLETE;
     showScreen('complete-screen');
+
+    // Track session completion
+    window.electronAPI.incrementSession().then(function (stats) {
+        if (stats) updateSessionStats(stats.total, stats.today);
+    });
 }
 
 function clearReflectForm() {
@@ -55,6 +69,10 @@ function clearReflectForm() {
     const notes = document.getElementById('reflect-notes');
     if (task) task.value = '';
     if (notes) notes.value = '';
-    document.querySelectorAll('.virtue-dot').forEach(function (d) { d.classList.remove('active'); });
-    virtueKeys.forEach(function (k) { virtueRatings[k] = 0; });
+    document.querySelectorAll('.virtue-dot').forEach(function (d) {
+        d.classList.remove('active');
+    });
+    virtueKeys.forEach(function (k) {
+        virtueRatings[k] = 0;
+    });
 }

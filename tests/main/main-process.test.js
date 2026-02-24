@@ -31,6 +31,10 @@ const mockWindow = {
     setVibrancy: jest.fn(),
     setHasShadow: jest.fn(),
     setBackgroundColor: jest.fn(),
+    webContents: {
+        send: jest.fn(),
+        openDevTools: jest.fn(),
+    },
 };
 
 const ipcHandlers = {};
@@ -49,8 +53,27 @@ jest.mock('electron', () => ({
         whenReady: jest.fn().mockReturnValue(Promise.resolve()),
         on: jest.fn(),
         quit: jest.fn(),
+        name: 'Chronos',
     },
     BrowserWindow: jest.fn().mockImplementation(() => mockWindow),
+    Menu: {
+        buildFromTemplate: jest.fn().mockReturnValue({}),
+        setApplicationMenu: jest.fn(),
+    },
+    Tray: jest.fn().mockImplementation(() => ({
+        setToolTip: jest.fn(),
+        setContextMenu: jest.fn(),
+        setTitle: jest.fn(),
+        destroy: jest.fn(),
+    })),
+    nativeImage: {
+        createFromPath: jest.fn().mockReturnValue({
+            resize: jest.fn().mockReturnValue({
+                setTemplateImage: jest.fn(),
+            }),
+        }),
+        createEmpty: jest.fn().mockReturnValue({}),
+    },
     ipcMain: {
         on: jest.fn((channel, handler) => {
             ipcHandlers[channel] = handler;
@@ -69,6 +92,26 @@ jest.mock('electron', () => ({
     }),
     dialog: mockDialog,
 }));
+
+// ── Mock electron-store ──────────────────────────────
+const mockStoreData = {
+    workMinutes: 25,
+    restMinutes: 5,
+    logDir: '',
+    audioMuted: false,
+    totalSessions: 0,
+    todaySessions: 0,
+    todayDate: '',
+};
+
+jest.mock('electron-store', () => {
+    return jest.fn().mockImplementation(() => ({
+        get: jest.fn((key) => mockStoreData[key]),
+        set: jest.fn((key, value) => {
+            mockStoreData[key] = value;
+        }),
+    }));
+});
 
 // ── Load main/index.js to register handlers ──────────
 beforeAll(() => {
@@ -106,6 +149,10 @@ describe('IPC Handler Registration', () => {
 
     test('registers return-to-setup handler', () => {
         expect(ipcHandlers['return-to-setup']).toBeDefined();
+    });
+
+    test('registers tray-timer-update handler', () => {
+        expect(ipcHandlers['tray-timer-update']).toBeDefined();
     });
 
     test('registers select-log-dir invoke handler', () => {
@@ -149,10 +196,7 @@ describe('Window Management — Work Mode', () => {
     test('enter-work-mode positions bottom-right', () => {
         ipcHandlers['enter-work-mode']();
         // Screen is 1920x1080
-        expect(mockWindow.setPosition).toHaveBeenCalledWith(
-            1920 - 160,
-            1080 - 200
-        );
+        expect(mockWindow.setPosition).toHaveBeenCalledWith(1920 - 160, 1080 - 200);
     });
 });
 
@@ -300,26 +344,32 @@ describe('Save Reflection — File I/O', () => {
     });
 
     test('returns error when no log directory set', async () => {
-        const result = await ipcInvokeHandlers['save-reflection']({}, {
-            logDir: '',
-            task: 'test',
-            notes: 'notes',
-            workMinutes: 25,
-            restMinutes: 5,
-        });
+        const result = await ipcInvokeHandlers['save-reflection'](
+            {},
+            {
+                logDir: '',
+                task: 'test',
+                notes: 'notes',
+                workMinutes: 25,
+                restMinutes: 5,
+            },
+        );
         expect(result.success).toBe(false);
         expect(result.error).toContain('No log directory');
     });
 
     test('creates JSONL file with structured log', async () => {
-        const result = await ipcInvokeHandlers['save-reflection']({}, {
-            logDir: tempDir,
-            task: 'Coding',
-            notes: 'Good session',
-            virtueRatings: { arete: 4 },
-            workMinutes: 25,
-            restMinutes: 5,
-        });
+        const result = await ipcInvokeHandlers['save-reflection'](
+            {},
+            {
+                logDir: tempDir,
+                task: 'Coding',
+                notes: 'Good session',
+                virtueRatings: { arete: 4 },
+                workMinutes: 25,
+                restMinutes: 5,
+            },
+        );
 
         expect(result.success).toBe(true);
 
@@ -338,14 +388,17 @@ describe('Save Reflection — File I/O', () => {
     });
 
     test('creates Markdown file with human-readable entry', async () => {
-        await ipcInvokeHandlers['save-reflection']({}, {
-            logDir: tempDir,
-            task: 'Writing tests',
-            notes: 'Comprehensive',
-            virtueRatings: { arete: 5, phronesis: 3 },
-            workMinutes: 30,
-            restMinutes: 10,
-        });
+        await ipcInvokeHandlers['save-reflection'](
+            {},
+            {
+                logDir: tempDir,
+                task: 'Writing tests',
+                notes: 'Comprehensive',
+                virtueRatings: { arete: 5, phronesis: 3 },
+                workMinutes: 30,
+                restMinutes: 10,
+            },
+        );
 
         const today = new Date().toISOString().split('T')[0];
         const mdPath = path.join(tempDir, `${today}.md`);
@@ -383,24 +436,30 @@ describe('Save Reflection — File I/O', () => {
 
     test('creates directory if it does not exist', async () => {
         const nestedDir = path.join(tempDir, 'logs', 'chronos');
-        await ipcInvokeHandlers['save-reflection']({}, {
-            logDir: nestedDir,
-            task: 'test',
-            notes: '',
-            workMinutes: 25,
-            restMinutes: 5,
-        });
+        await ipcInvokeHandlers['save-reflection'](
+            {},
+            {
+                logDir: nestedDir,
+                task: 'test',
+                notes: '',
+                workMinutes: 25,
+                restMinutes: 5,
+            },
+        );
         expect(fs.existsSync(nestedDir)).toBe(true);
     });
 
     test('handles empty task and notes gracefully', async () => {
-        const result = await ipcInvokeHandlers['save-reflection']({}, {
-            logDir: tempDir,
-            task: '',
-            notes: '',
-            workMinutes: 25,
-            restMinutes: 5,
-        });
+        const result = await ipcInvokeHandlers['save-reflection'](
+            {},
+            {
+                logDir: tempDir,
+                task: '',
+                notes: '',
+                workMinutes: 25,
+                restMinutes: 5,
+            },
+        );
         expect(result.success).toBe(true);
 
         const today = new Date().toISOString().split('T')[0];
@@ -410,13 +469,16 @@ describe('Save Reflection — File I/O', () => {
     });
 
     test('returns filePath on success', async () => {
-        const result = await ipcInvokeHandlers['save-reflection']({}, {
-            logDir: tempDir,
-            task: 'test',
-            notes: '',
-            workMinutes: 25,
-            restMinutes: 5,
-        });
+        const result = await ipcInvokeHandlers['save-reflection'](
+            {},
+            {
+                logDir: tempDir,
+                task: 'test',
+                notes: '',
+                workMinutes: 25,
+                restMinutes: 5,
+            },
+        );
         expect(result.success).toBe(true);
         expect(result.filePath).toBeTruthy();
         expect(result.filePath).toContain(tempDir);

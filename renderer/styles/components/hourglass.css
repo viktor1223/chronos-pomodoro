@@ -35,10 +35,9 @@
 }
 
 @keyframes breathe {
-
     0%,
     100% {
-        opacity: 0.50;
+        opacity: 0.5;
         transform: translateY(0);
     }
 

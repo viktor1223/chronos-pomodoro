@@ -9,7 +9,7 @@ function getTimerState() {
         return { elapsedMs: 0, remainingMs: durationMs, progress: 0 };
     }
     const now = performance.now();
-    const paused = pauseStartedAt > 0 ? (now - pauseStartedAt) : 0;
+    const paused = pauseStartedAt > 0 ? now - pauseStartedAt : 0;
     const elapsed = now - startTimestamp - pausedAccumulatedMs - paused;
     const remaining = Math.max(0, durationMs - elapsed);
     const progress = durationMs > 0 ? Math.min(1, elapsed / durationMs) : 0;
@@ -55,6 +55,13 @@ function animationLoop(timestamp) {
 
     if (phase === Phase.REST) {
         updateRestDisplay(remainingMs);
+    }
+
+    // Throttled tray timer update (once per second)
+    const currentSec = Math.ceil(remainingMs / 1000);
+    if (animationLoop._lastTraySec !== currentSec) {
+        animationLoop._lastTraySec = currentSec;
+        window.electronAPI.trayTimerUpdate({ remainingMs: remainingMs, phase: phase });
     }
 
     updateDebugOverlay(elapsedMs, remainingMs, progress);

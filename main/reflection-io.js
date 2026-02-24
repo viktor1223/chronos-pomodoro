@@ -53,10 +53,18 @@ async function saveReflection(_event, data) {
         // Virtue ratings
         if (data.virtueRatings) {
             const vr = data.virtueRatings;
-            const virtueNames = { arete: 'Areté', sophrosyne: 'Sophrosyne', andreia: 'Andreia', dikaiosyne: 'Dikaiosyne', phronesis: 'Phronesis' };
+            const virtueNames = {
+                arete: 'Areté',
+                sophrosyne: 'Sophrosyne',
+                andreia: 'Andreia',
+                dikaiosyne: 'Dikaiosyne',
+                phronesis: 'Phronesis',
+            };
             const rated = Object.entries(vr).filter(([, v]) => v > 0);
             if (rated.length > 0) {
-                const virtueStr = rated.map(([k, v]) => `${virtueNames[k] || k}: ${v}/5`).join(', ');
+                const virtueStr = rated
+                    .map(([k, v]) => `${virtueNames[k] || k}: ${v}/5`)
+                    .join(', ');
                 entry += `| Virtues | ${virtueStr} |\n`;
             }
         }

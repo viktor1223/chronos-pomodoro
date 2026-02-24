@@ -1,31 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chronos</title>
-    <link rel="stylesheet" href="styles/base.css">
-    <link rel="stylesheet" href="styles/layout.css">
-    <link rel="stylesheet" href="styles/controls.css">
-    <link rel="stylesheet" href="styles/setup.css">
-    <link rel="stylesheet" href="styles/work.css">
-    <link rel="stylesheet" href="styles/alert.css">
-    <link rel="stylesheet" href="styles/rest.css">
-    <link rel="stylesheet" href="styles/reflect.css">
-    <link rel="stylesheet" href="styles/complete.css">
-    <link rel="stylesheet" href="styles/components/hourglass.css">
-    <link rel="stylesheet" href="styles/components/debug.css">
+    <link rel="stylesheet" href="styles/base.css" />
+    <link rel="stylesheet" href="styles/layout.css" />
+    <link rel="stylesheet" href="styles/controls.css" />
+    <link rel="stylesheet" href="styles/setup.css" />
+    <link rel="stylesheet" href="styles/work.css" />
+    <link rel="stylesheet" href="styles/alert.css" />
+    <link rel="stylesheet" href="styles/rest.css" />
+    <link rel="stylesheet" href="styles/reflect.css" />
+    <link rel="stylesheet" href="styles/complete.css" />
+    <link rel="stylesheet" href="styles/components/hourglass.css" />
+    <link rel="stylesheet" href="styles/components/debug.css" />
 </head>
 
 <body>
     <!-- ═══════════════════════════════════════════════ -->
     <!-- SETUP SCREEN — Ritual Entry                     -->
     <!-- ═══════════════════════════════════════════════ -->
-    <div id="setup-screen" class="screen active">
-        <div class="window-controls">
-            <button class="wc-btn wc-close" onclick="window.electronAPI.closeWindow()"></button>
-            <button class="wc-btn wc-minimize" onclick="window.electronAPI.minimizeWindow()"></button>
+    <div id="setup-screen" class="screen active" role="main" aria-label="Setup screen">
+        <div class="window-controls" role="toolbar" aria-label="Window controls">
+            <button class="wc-btn wc-close" onclick="window.electronAPI.closeWindow()"
+                aria-label="Close window"></button>
+            <button class="wc-btn wc-minimize" onclick="window.electronAPI.minimizeWindow()"
+                aria-label="Minimize window"></button>
         </div>
 
         <!-- Gear toggle — top right -->
@@ -47,9 +49,13 @@
 
             <p class="time-preview" id="time-preview">25 minutes</p>
 
-            <button class="btn-primary" onclick="startWork()">Begin</button>
+            <button class="btn-primary" onclick="startWork()" aria-label="Begin work session">
+                Begin
+            </button>
 
             <p class="wisdom-whisper" id="wisdom-whisper"></p>
+
+            <p class="session-stats" id="session-stats" aria-label="Session statistics"></p>
         </div>
 
         <!-- Settings drawer (collapsed by default) -->
@@ -61,9 +67,14 @@
                         Work
                     </label>
                     <div class="input-wrapper">
-                        <button class="spin-btn" onclick="adjustTime('work-time', -1)">−</button>
-                        <input type="number" id="work-time" value="25" min="0.1" max="120" step="0.1">
-                        <button class="spin-btn" onclick="adjustTime('work-time', 1)">+</button>
+                        <button class="spin-btn" onclick="adjustTime('work-time', -1)" aria-label="Decrease work time">
+                            −
+                        </button>
+                        <input type="number" id="work-time" value="25" min="0.1" max="120" step="0.1"
+                            aria-label="Work duration in minutes" />
+                        <button class="spin-btn" onclick="adjustTime('work-time', 1)" aria-label="Increase work time">
+                            +
+                        </button>
                     </div>
                 </div>
 
@@ -73,9 +84,15 @@
                         Rest
                     </label>
                     <div class="input-wrapper">
-                        <button class="spin-btn" onclick="adjustTime('rest-time', -0.5)">−</button>
-                        <input type="number" id="rest-time" value="5" min="0.1" max="60" step="0.1">
-                        <button class="spin-btn" onclick="adjustTime('rest-time', 0.5)">+</button>
+                        <button class="spin-btn" onclick="adjustTime('rest-time', -0.5)"
+                            aria-label="Decrease rest time">
+                            −
+                        </button>
+                        <input type="number" id="rest-time" value="5" min="0.1" max="60" step="0.1"
+                            aria-label="Rest duration in minutes" />
+                        <button class="spin-btn" onclick="adjustTime('rest-time', 0.5)" aria-label="Increase rest time">
+                            +
+                        </button>
                     </div>
                 </div>
 
@@ -85,8 +102,11 @@
                         Log directory
                     </label>
                     <div class="input-wrapper path-wrapper">
-                        <input type="text" id="log-dir" placeholder="~/Documents/chronos-logs" class="path-input">
-                        <button class="spin-btn browse-btn" onclick="browseLogDir()" title="Browse">…</button>
+                        <input type="text" id="log-dir" placeholder="~/Documents/chronos-logs" class="path-input" />
+                        <button class="spin-btn browse-btn" onclick="browseLogDir()" title="Browse"
+                            aria-label="Browse for log directory">
+                            …
+                        </button>
                     </div>
                 </div>
             </div>
@@ -96,17 +116,17 @@
     <!-- ═══════════════════════════════════════════════ -->
     <!-- WORK SCREEN — Silent Companion Widget           -->
     <!-- ═══════════════════════════════════════════════ -->
-    <div id="work-screen" class="screen">
+    <div id="work-screen" class="screen" role="timer" aria-label="Work timer">
         <div class="work-content" ondblclick="window.electronAPI.minimizeWindow()">
-            <div id="work-hourglass"></div>
-            <p class="pause-indicator" id="work-pause-indicator">⏸</p>
+            <div id="work-hourglass" aria-label="Hourglass timer animation"></div>
+            <p class="pause-indicator" id="work-pause-indicator" aria-live="polite">⏸</p>
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════ -->
     <!-- ALERT SCREEN — Earned Rest (Quote as Reward)    -->
     <!-- ═══════════════════════════════════════════════ -->
-    <div id="alert-screen" class="screen">
+    <div id="alert-screen" class="screen" role="alert" aria-label="Work complete alert">
         <div class="alert-columns">
             <div class="column-ornament left"></div>
             <div class="column-ornament right"></div>
@@ -149,8 +169,8 @@
                 <span class="quote-author" id="quote-author"></span>
             </div>
 
-            <button class="btn-rest" onclick="startRest()">
-                <span class="btn-rest-icon">☽</span>
+            <button class="btn-rest" onclick="startRest()" aria-label="Start rest period">
+                <span class="btn-rest-icon" aria-hidden="true">☽</span>
                 Rest
             </button>
         </div>
@@ -159,7 +179,7 @@
     <!-- ═══════════════════════════════════════════════ -->
     <!-- REST SCREEN — Contemplation                     -->
     <!-- ═══════════════════════════════════════════════ -->
-    <div id="rest-screen" class="screen">
+    <div id="rest-screen" class="screen" role="timer" aria-label="Rest timer">
         <div class="rest-content">
             <div class="rest-particles" id="rest-particles"></div>
 
@@ -167,19 +187,25 @@
 
             <p class="pause-indicator" id="rest-pause-indicator">⏸</p>
 
-            <p class="rest-timer" id="rest-timer-display">5:00</p>
+            <p class="rest-timer" id="rest-timer-display" aria-live="polite" aria-atomic="true">
+                5:00
+            </p>
 
             <div class="rest-quote">
                 <p id="rest-quote-text"></p>
                 <span class="rest-quote-author" id="rest-quote-author"></span>
             </div>
+
+            <button class="btn-end-rest" id="btn-end-rest" onclick="onPhaseComplete()" aria-label="End rest early">
+                End Early
+            </button>
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════ -->
     <!-- REFLECT SCREEN — Post-session Journal           -->
     <!-- ═══════════════════════════════════════════════ -->
-    <div id="reflect-screen" class="screen">
+    <div id="reflect-screen" class="screen" role="form" aria-label="Session reflection">
         <div class="reflect-content">
             <h1 class="reflect-title">Reflect</h1>
             <p class="reflect-subtitle">A moment of clarity before you move on.</p>
@@ -199,11 +225,21 @@
                                 <span class="virtue-desc">Excellence</span>
                             </div>
                             <div class="virtue-dots">
-                                <button class="virtue-dot" data-virtue="arete" data-value="1">1</button>
-                                <button class="virtue-dot" data-virtue="arete" data-value="2">2</button>
-                                <button class="virtue-dot" data-virtue="arete" data-value="3">3</button>
-                                <button class="virtue-dot" data-virtue="arete" data-value="4">4</button>
-                                <button class="virtue-dot" data-virtue="arete" data-value="5">5</button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="1">
+                                    1
+                                </button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="2">
+                                    2
+                                </button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="3">
+                                    3
+                                </button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="4">
+                                    4
+                                </button>
+                                <button class="virtue-dot" data-virtue="arete" data-value="5">
+                                    5
+                                </button>
                             </div>
                         </div>
                         <div class="virtue-row">
@@ -212,11 +248,21 @@
                                 <span class="virtue-desc">Temperance</span>
                             </div>
                             <div class="virtue-dots">
-                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="1">1</button>
-                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="2">2</button>
-                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="3">3</button>
-                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="4">4</button>
-                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="5">5</button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="1">
+                                    1
+                                </button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="2">
+                                    2
+                                </button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="3">
+                                    3
+                                </button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="4">
+                                    4
+                                </button>
+                                <button class="virtue-dot" data-virtue="sophrosyne" data-value="5">
+                                    5
+                                </button>
                             </div>
                         </div>
                         <div class="virtue-row">
@@ -225,11 +271,21 @@
                                 <span class="virtue-desc">Courage</span>
                             </div>
                             <div class="virtue-dots">
-                                <button class="virtue-dot" data-virtue="andreia" data-value="1">1</button>
-                                <button class="virtue-dot" data-virtue="andreia" data-value="2">2</button>
-                                <button class="virtue-dot" data-virtue="andreia" data-value="3">3</button>
-                                <button class="virtue-dot" data-virtue="andreia" data-value="4">4</button>
-                                <button class="virtue-dot" data-virtue="andreia" data-value="5">5</button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="1">
+                                    1
+                                </button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="2">
+                                    2
+                                </button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="3">
+                                    3
+                                </button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="4">
+                                    4
+                                </button>
+                                <button class="virtue-dot" data-virtue="andreia" data-value="5">
+                                    5
+                                </button>
                             </div>
                         </div>
                         <div class="virtue-row">
@@ -238,11 +294,21 @@
                                 <span class="virtue-desc">Justice</span>
                             </div>
                             <div class="virtue-dots">
-                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="1">1</button>
-                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="2">2</button>
-                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="3">3</button>
-                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="4">4</button>
-                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="5">5</button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="1">
+                                    1
+                                </button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="2">
+                                    2
+                                </button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="3">
+                                    3
+                                </button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="4">
+                                    4
+                                </button>
+                                <button class="virtue-dot" data-virtue="dikaiosyne" data-value="5">
+                                    5
+                                </button>
                             </div>
                         </div>
                         <div class="virtue-row">
@@ -251,11 +317,21 @@
                                 <span class="virtue-desc">Practical Wisdom</span>
                             </div>
                             <div class="virtue-dots">
-                                <button class="virtue-dot" data-virtue="phronesis" data-value="1">1</button>
-                                <button class="virtue-dot" data-virtue="phronesis" data-value="2">2</button>
-                                <button class="virtue-dot" data-virtue="phronesis" data-value="3">3</button>
-                                <button class="virtue-dot" data-virtue="phronesis" data-value="4">4</button>
-                                <button class="virtue-dot" data-virtue="phronesis" data-value="5">5</button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="1">
+                                    1
+                                </button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="2">
+                                    2
+                                </button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="3">
+                                    3
+                                </button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="4">
+                                    4
+                                </button>
+                                <button class="virtue-dot" data-virtue="phronesis" data-value="5">
+                                    5
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -268,8 +344,12 @@
             </div>
 
             <div class="reflect-actions">
-                <button class="btn-primary" onclick="saveReflectionAndFinish()">Save</button>
-                <button class="btn-skip" onclick="skipReflection()">Skip</button>
+                <button class="btn-primary" onclick="saveReflectionAndFinish()" aria-label="Save reflection">
+                    Save
+                </button>
+                <button class="btn-skip" onclick="skipReflection()" aria-label="Skip reflection">
+                    Skip
+                </button>
             </div>
         </div>
     </div>
@@ -277,7 +357,7 @@
     <!-- ═══════════════════════════════════════════════ -->
     <!-- COMPLETE SCREEN                                 -->
     <!-- ═══════════════════════════════════════════════ -->
-    <div id="complete-screen" class="screen">
+    <div id="complete-screen" class="screen" role="status" aria-label="Session complete">
         <div class="complete-content">
             <div class="complete-laurel">
                 <svg viewBox="0 0 120 120" class="complete-laurel-svg">
@@ -295,22 +375,27 @@
                         <ellipse cx="88" cy="55" rx="4" ry="9" transform="rotate(5 88 55)" fill="rgba(198,168,107,0.10)"
                             stroke="rgba(198,168,107,0.25)" stroke-width="0.8" />
                     </g>
-                    <text x="60" y="75" text-anchor="middle" font-size="32" fill="rgba(198,168,107,0.5)">✦</text>
+                    <text x="60" y="75" text-anchor="middle" font-size="32" fill="rgba(198,168,107,0.5)">
+                        ✦
+                    </text>
                 </svg>
             </div>
 
             <h1 class="complete-title">Well Done</h1>
             <p class="complete-subtitle">Return to your purpose.</p>
             <p class="complete-saved-note" id="complete-saved-note"></p>
+            <p class="session-stats" id="complete-session-stats" aria-label="Session statistics"></p>
 
-            <button class="btn-primary" onclick="returnToSetup()">Begin Again</button>
+            <button class="btn-primary" onclick="returnToSetup()" aria-label="Start a new session">
+                Begin Again
+            </button>
         </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════ -->
     <!-- DEBUG OVERLAY — Cmd+D to toggle               -->
     <!-- ═══════════════════════════════════════════════ -->
-    <pre id="debug-overlay" style="display:none"></pre>
+    <pre id="debug-overlay" style="display: none"></pre>
 
     <script src="data/quotes.js"></script>
     <script src="data/whispers.js"></script>

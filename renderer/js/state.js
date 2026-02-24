@@ -4,7 +4,14 @@
    ═══════════════════════════════════════════════════════ */
 
 // ── Phase Enum ────────────────────────────────────────
-const Phase = Object.freeze({ IDLE: 'idle', WORK: 'work', ALERT: 'alert', REST: 'rest', REFLECT: 'reflect', COMPLETE: 'complete' });
+const Phase = Object.freeze({
+    IDLE: 'idle',
+    WORK: 'work',
+    ALERT: 'alert',
+    REST: 'rest',
+    REFLECT: 'reflect',
+    COMPLETE: 'complete',
+});
 
 // ── Mutable State ─────────────────────────────────────
 let phase = Phase.IDLE;
@@ -50,12 +57,36 @@ function updateDebugOverlay(elapsedMs, remainingMs, progress) {
     const overlay = document.getElementById('debug-overlay');
     if (!overlay) return;
     overlay.textContent =
-        'phase: ' + phase + '\n' +
-        'paused: ' + (pauseStartedAt > 0) + '\n' +
-        'durationMs: ' + durationMs.toFixed(0) + '\n' +
-        'elapsedMs: ' + elapsedMs.toFixed(0) + '\n' +
-        'remainingMs: ' + remainingMs.toFixed(0) + '\n' +
-        'progress: ' + progress.toFixed(6) + '\n' +
-        'animProgress: ' + animatedProgress.toFixed(6) + '\n' +
-        'fps: ' + currentFps.toFixed(1);
+        'phase: ' +
+        phase +
+        '\n' +
+        'paused: ' +
+        (pauseStartedAt > 0) +
+        '\n' +
+        'durationMs: ' +
+        durationMs.toFixed(0) +
+        '\n' +
+        'elapsedMs: ' +
+        elapsedMs.toFixed(0) +
+        '\n' +
+        'remainingMs: ' +
+        remainingMs.toFixed(0) +
+        '\n' +
+        'progress: ' +
+        progress.toFixed(6) +
+        '\n' +
+        'animProgress: ' +
+        animatedProgress.toFixed(6) +
+        '\n' +
+        'fps: ' +
+        currentFps.toFixed(1);
+}
+
+// ── Session Statistics Display ────────────────────────
+function updateSessionStats(total, today) {
+    const setupStats = document.getElementById('session-stats-setup');
+    const completeStats = document.getElementById('session-stats-complete');
+    const text = 'Sessions today: ' + today + ' · Total: ' + total;
+    if (setupStats) setupStats.textContent = text;
+    if (completeStats) completeStats.textContent = text;
 }

@@ -10,5 +10,7 @@ function showWisdomWhisper() {
     const whisper = whispers[Math.floor(Math.random() * whispers.length)];
     el.textContent = whisper;
     el.style.opacity = '0';
-    setTimeout(function () { el.style.opacity = '1'; }, 100);
+    setTimeout(function () {
+        el.style.opacity = '1';
+    }, 100);
 }

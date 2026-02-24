@@ -8,25 +8,26 @@
 :root {
     /* ── Typography ─────────────────────────────────── */
     --font-display: 'Cormorant Garamond', Georgia, serif;
-    --font-ui: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, 'Helvetica Neue', sans-serif;
+    --font-ui:
+        -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, 'Helvetica Neue', sans-serif;
 
     /* ── Palette — Museum brass on warm black ──────── */
-    --gold: #C6A86B;
+    --gold: #c6a86b;
     --gold-rgb: 198, 168, 107;
-    --surface: #1A1A1C;
+    --surface: #1a1a1c;
     --surface-raised: rgba(255, 255, 255, 0.045);
 
     /* ── Text hierarchy ────────────────────────────── */
-    --text-primary: rgba(255, 255, 255, 0.90);
+    --text-primary: rgba(255, 255, 255, 0.9);
     --text-secondary: rgba(255, 255, 255, 0.45);
     --text-tertiary: rgba(255, 255, 255, 0.22);
     --text-gold: rgba(198, 168, 107, 0.82);
-    --text-gold-whisper: rgba(198, 168, 107, 0.20);
+    --text-gold-whisper: rgba(198, 168, 107, 0.2);
 
     /* ── Glass ──────────────────────────────────────── */
     --glass-bg: rgba(255, 255, 255, 0.04);
     --glass-border: rgba(255, 255, 255, 0.07);
-    --glass-highlight: rgba(255, 255, 255, 0.10);
+    --glass-highlight: rgba(255, 255, 255, 0.1);
 
     /* ── Layout ─────────────────────────────────────── */
     --radius-outer: 24px;
@@ -106,7 +107,6 @@ body {
 
 /* ── Pause animation ────────────────────────────────── */
 @keyframes pausePulse {
-
     0%,
     100% {
         opacity: 0.4;

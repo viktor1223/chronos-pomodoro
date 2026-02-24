@@ -11,9 +11,9 @@ function createParticles() {
         const el = document.createElement('div');
         el.className = 'rest-particle';
         el.style.left = Math.random() * 100 + '%';
-        el.style.animationDuration = (8 + Math.random() * 12) + 's';
-        el.style.animationDelay = (Math.random() * 10) + 's';
-        const size = (1 + Math.random()) + 'px';
+        el.style.animationDuration = 8 + Math.random() * 12 + 's';
+        el.style.animationDelay = Math.random() * 10 + 's';
+        const size = 1 + Math.random() + 'px';
         el.style.width = size;
         el.style.height = size;
         el.style.opacity = String(0.08 + Math.random() * 0.14);

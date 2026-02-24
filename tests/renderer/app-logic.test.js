@@ -19,56 +19,32 @@ const path = require('path');
 // ── Load source into jsdom ────────────────────────────
 const hourglassSource = fs.readFileSync(
     path.join(__dirname, '../../renderer/hourglass.js'),
-    'utf8'
+    'utf8',
 );
-const quotesSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/data/quotes.js'),
-    'utf8'
-);
+const quotesSource = fs.readFileSync(path.join(__dirname, '../../renderer/data/quotes.js'), 'utf8');
 const whispersSource = fs.readFileSync(
     path.join(__dirname, '../../renderer/data/whispers.js'),
-    'utf8'
+    'utf8',
 );
-const audioSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/js/audio.js'),
-    'utf8'
-);
-const stateSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/js/state.js'),
-    'utf8'
-);
-const timerSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/js/timer.js'),
-    'utf8'
-);
-const screensSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/js/screens.js'),
-    'utf8'
-);
+const audioSource = fs.readFileSync(path.join(__dirname, '../../renderer/js/audio.js'), 'utf8');
+const stateSource = fs.readFileSync(path.join(__dirname, '../../renderer/js/state.js'), 'utf8');
+const timerSource = fs.readFileSync(path.join(__dirname, '../../renderer/js/timer.js'), 'utf8');
+const screensSource = fs.readFileSync(path.join(__dirname, '../../renderer/js/screens.js'), 'utf8');
 const settingsSource = fs.readFileSync(
     path.join(__dirname, '../../renderer/js/settings.js'),
-    'utf8'
+    'utf8',
 );
 const particlesSource = fs.readFileSync(
     path.join(__dirname, '../../renderer/js/particles.js'),
-    'utf8'
+    'utf8',
 );
-const virtueSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/js/virtue.js'),
-    'utf8'
-);
+const virtueSource = fs.readFileSync(path.join(__dirname, '../../renderer/js/virtue.js'), 'utf8');
 const reflectionSource = fs.readFileSync(
     path.join(__dirname, '../../renderer/js/reflection.js'),
-    'utf8'
+    'utf8',
 );
-const wisdomSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/js/wisdom.js'),
-    'utf8'
-);
-const appSource = fs.readFileSync(
-    path.join(__dirname, '../../renderer/app.js'),
-    'utf8'
-);
+const wisdomSource = fs.readFileSync(path.join(__dirname, '../../renderer/js/wisdom.js'), 'utf8');
+const appSource = fs.readFileSync(path.join(__dirname, '../../renderer/app.js'), 'utf8');
 
 // Mock electronAPI before loading app code
 function setupEnvironment() {
@@ -126,12 +102,26 @@ function setupEnvironment() {
         returnToSetup: jest.fn(),
         selectLogDir: jest.fn().mockResolvedValue(null),
         saveReflection: jest.fn().mockResolvedValue({ success: true }),
+        getSettings: jest.fn().mockResolvedValue({
+            workMinutes: 25,
+            restMinutes: 5,
+            logDir: '',
+            audioMuted: false,
+            totalSessions: 0,
+            todaySessions: 0,
+        }),
+        saveSettings: jest.fn(),
+        incrementSession: jest.fn().mockResolvedValue({ totalSessions: 1, todaySessions: 1 }),
+        trayTimerUpdate: jest.fn(),
+        onTrayStop: jest.fn(),
     };
 
     // Mock performance.now
     let perfTime = 1000;
     jest.spyOn(performance, 'now').mockImplementation(() => perfTime);
-    window._setPerfTime = (t) => { perfTime = t; };
+    window._setPerfTime = (t) => {
+        perfTime = t;
+    };
     window._getPerfTime = () => perfTime;
 
     // Mock requestAnimationFrame / cancelAnimationFrame
@@ -164,22 +154,57 @@ function setupEnvironment() {
 
 // List of symbols to expose from app.js into the global/test scope
 const EXPOSE_FUNCTIONS = [
-    'Phase', 'showScreen', 'toggleSettings', 'updateTimePreview',
-    'adjustTime', 'getTimerState', 'animationLoop', 'startAnimationLoop',
-    'stopAnimationLoop', 'onPhaseComplete', 'startWork', 'startRest',
-    'updateRestDisplay', 'updateSand', 'createParticles', 'resetSand',
-    'returnToSetup', 'stopTimer', 'initVirtueSelector', 'browseLogDir',
-    'saveReflectionAndFinish', 'skipReflection', 'clearReflectForm',
-    'showWisdomWhisper', 'playChime', 'playRestComplete', 'getSessionQuote',
-    'updateDebugOverlay', 'togglePause', 'pauseTimer', 'resumeTimer',
+    'Phase',
+    'showScreen',
+    'toggleSettings',
+    'updateTimePreview',
+    'adjustTime',
+    'getTimerState',
+    'animationLoop',
+    'startAnimationLoop',
+    'stopAnimationLoop',
+    'onPhaseComplete',
+    'startWork',
+    'startRest',
+    'updateRestDisplay',
+    'updateSand',
+    'createParticles',
+    'resetSand',
+    'returnToSetup',
+    'stopTimer',
+    'initVirtueSelector',
+    'browseLogDir',
+    'saveReflectionAndFinish',
+    'skipReflection',
+    'clearReflectForm',
+    'showWisdomWhisper',
+    'playChime',
+    'playRestComplete',
+    'getSessionQuote',
+    'updateDebugOverlay',
+    'togglePause',
+    'pauseTimer',
+    'resumeTimer',
 ];
 
 const EXPOSE_VARS = [
-    'phase', 'durationMs', 'workMinutes', 'restMinutes', 'logDir',
-    'virtueRatings', 'virtueKeys', 'quotes', 'whispers',
-    'debugVisible', 'settingsOpen', 'animatedProgress',
-    'workHourglass', 'restHourglass', 'setupHourglass',
-    'pauseStartedAt', 'pausedAccumulatedMs',
+    'phase',
+    'durationMs',
+    'workMinutes',
+    'restMinutes',
+    'logDir',
+    'virtueRatings',
+    'virtueKeys',
+    'quotes',
+    'whispers',
+    'debugVisible',
+    'settingsOpen',
+    'animatedProgress',
+    'workHourglass',
+    'restHourglass',
+    'setupHourglass',
+    'pauseStartedAt',
+    'pausedAccumulatedMs',
 ];
 
 beforeEach(() => {
@@ -188,11 +213,38 @@ beforeEach(() => {
     setupEnvironment();
 
     // Build a wrapper that executes both scripts and exposes symbols to globalThis
-    const exportLine = EXPOSE_FUNCTIONS.concat(EXPOSE_VARS).map(
-        name => `  try { globalThis.${name} = ${name}; } catch(e) {}`
-    ).join('\n');
+    const exportLine = EXPOSE_FUNCTIONS.concat(EXPOSE_VARS)
+        .map((name) => `  try { globalThis.${name} = ${name}; } catch(e) {}`)
+        .join('\n');
 
-    const wrapped = quotesSource + '\n' + whispersSource + '\n' + stateSource + '\n' + hourglassSource + '\n' + audioSource + '\n' + timerSource + '\n' + screensSource + '\n' + settingsSource + '\n' + particlesSource + '\n' + virtueSource + '\n' + reflectionSource + '\n' + wisdomSource + '\n' + appSource + '\n' + exportLine;
+    const wrapped =
+        quotesSource +
+        '\n' +
+        whispersSource +
+        '\n' +
+        stateSource +
+        '\n' +
+        hourglassSource +
+        '\n' +
+        audioSource +
+        '\n' +
+        timerSource +
+        '\n' +
+        screensSource +
+        '\n' +
+        settingsSource +
+        '\n' +
+        particlesSource +
+        '\n' +
+        virtueSource +
+        '\n' +
+        reflectionSource +
+        '\n' +
+        wisdomSource +
+        '\n' +
+        appSource +
+        '\n' +
+        exportLine;
     const fn = new Function(wrapped);
     fn.call(window);
 
@@ -388,7 +440,7 @@ describe('Timer Display — updateRestDisplay()', () => {
     });
 
     test('rounds up remaining milliseconds', () => {
-        updateRestDisplay(1500);  // 1.5 seconds → ceil = 2 seconds
+        updateRestDisplay(1500); // 1.5 seconds → ceil = 2 seconds
         const display = document.getElementById('rest-timer-display');
         expect(display.textContent).toBe('0:02');
     });
@@ -475,9 +527,9 @@ describe('Reflection Form — clearReflectForm()', () => {
 
     test('removes active class from all virtue dots', () => {
         const dots = document.querySelectorAll('.virtue-dot');
-        dots.forEach(d => d.classList.add('active'));
+        dots.forEach((d) => d.classList.add('active'));
         clearReflectForm();
-        dots.forEach(d => {
+        dots.forEach((d) => {
             expect(d.classList.contains('active')).toBe(false);
         });
     });
@@ -714,5 +766,254 @@ describe('Pause / Resume', () => {
         window._setPerfTime(2000);
         pauseTimer();
         expect(window.cancelAnimationFrame).toHaveBeenCalled();
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+//  START WORK — Phase Transition
+// ═══════════════════════════════════════════════════════
+
+describe('Start Work — startWork()', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('calls enterWorkMode on electronAPI', () => {
+        startWork();
+        stopAnimationLoop();
+        expect(window.electronAPI.enterWorkMode).toHaveBeenCalled();
+    });
+
+    test('persists settings via IPC', () => {
+        document.getElementById('work-time').value = '20';
+        document.getElementById('rest-time').value = '5';
+        startWork();
+        stopAnimationLoop();
+        expect(window.electronAPI.saveSettings).toHaveBeenCalledWith(
+            expect.objectContaining({
+                workMinutes: 20,
+                restMinutes: 5,
+            }),
+        );
+    });
+
+    test('removes paused class from body', () => {
+        document.body.classList.add('paused');
+        startWork();
+        stopAnimationLoop();
+        expect(document.body.classList.contains('paused')).toBe(false);
+    });
+
+    test('starts animation loop (requestAnimationFrame)', () => {
+        window._setPerfTime(1000);
+        startWork();
+        expect(window.requestAnimationFrame).toHaveBeenCalled();
+        stopAnimationLoop();
+    });
+
+    test('timer state shows running after startWork', () => {
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        window._setPerfTime(11000);
+        const state = getTimerState();
+        // 10 seconds elapsed
+        expect(state.elapsedMs).toBe(10000);
+        expect(state.remainingMs).toBeGreaterThan(0);
+        expect(state.progress).toBeGreaterThan(0);
+    });
+
+    test('timer duration matches work minutes input', () => {
+        document.getElementById('work-time').value = '2';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        window._setPerfTime(1001);
+        const state = getTimerState();
+        // 2 minutes = 120000ms, 1ms elapsed → 119999 remaining
+        expect(state.remainingMs).toBe(119999);
+    });
+
+    test('clamps work minutes to minimum 0.1 in saved settings', () => {
+        document.getElementById('work-time').value = '0.05';
+        startWork();
+        stopAnimationLoop();
+        expect(window.electronAPI.saveSettings).toHaveBeenCalledWith(
+            expect.objectContaining({ workMinutes: 0.1 }),
+        );
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+//  START REST — Phase Transition
+// ═══════════════════════════════════════════════════════
+
+describe('Start Rest — startRest()', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        document.getElementById('work-time').value = '1';
+        document.getElementById('rest-time').value = '3';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        jest.clearAllMocks();
+    });
+
+    test('calls enterRestMode on electronAPI', () => {
+        startRest();
+        stopAnimationLoop();
+        expect(window.electronAPI.enterRestMode).toHaveBeenCalled();
+    });
+
+    test('timer duration matches rest minutes', () => {
+        window._setPerfTime(2000);
+        startRest();
+        stopAnimationLoop();
+        window._setPerfTime(2001);
+        const state = getTimerState();
+        // 3 minutes = 180000ms, 1ms elapsed → 179999 remaining
+        expect(state.remainingMs).toBe(179999);
+    });
+
+    test('displays session quote on rest screen', () => {
+        startRest();
+        stopAnimationLoop();
+        const quoteEl = document.getElementById('rest-quote-text');
+        expect(quoteEl.textContent.length).toBeGreaterThan(0);
+    });
+
+    test('removes paused class from body', () => {
+        document.body.classList.add('paused');
+        startRest();
+        stopAnimationLoop();
+        expect(document.body.classList.contains('paused')).toBe(false);
+    });
+
+    test('starts animation loop (requestAnimationFrame)', () => {
+        startRest();
+        expect(window.requestAnimationFrame).toHaveBeenCalled();
+        stopAnimationLoop();
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+//  ON PHASE COMPLETE — Transition Logic
+// ═══════════════════════════════════════════════════════
+
+describe('Phase Complete — onPhaseComplete()', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    test('work complete calls workComplete IPC', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        jest.clearAllMocks();
+        onPhaseComplete();
+        expect(window.electronAPI.workComplete).toHaveBeenCalled();
+    });
+
+    test('work complete displays philosophy quote', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        onPhaseComplete();
+        const quoteEl = document.getElementById('philosophy-quote');
+        expect(quoteEl.textContent.length).toBeGreaterThan(0);
+    });
+
+    test('work complete stops animation loop', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        jest.clearAllMocks();
+        onPhaseComplete();
+        // After onPhaseComplete, getTimerState should return idle state
+        const state = getTimerState();
+        expect(state.elapsedMs).toBe(0);
+    });
+
+    test('rest complete calls restComplete IPC after delay', () => {
+        document.getElementById('work-time').value = '1';
+        document.getElementById('rest-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        startRest();
+        stopAnimationLoop();
+        jest.clearAllMocks();
+        onPhaseComplete();
+        jest.advanceTimersByTime(600);
+        expect(window.electronAPI.restComplete).toHaveBeenCalled();
+    });
+
+    test('rest complete displays reflect screen content', () => {
+        document.getElementById('work-time').value = '1';
+        document.getElementById('rest-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        startRest();
+        stopAnimationLoop();
+        onPhaseComplete();
+        // After rest complete, timer state should be idle (REFLECT phase)
+        const state = getTimerState();
+        expect(state.elapsedMs).toBe(0);
+    });
+});
+
+// ═══════════════════════════════════════════════════════
+//  TIMER STATE ENGINE — getTimerState()
+// ═══════════════════════════════════════════════════════
+
+describe('Timer State — getTimerState()', () => {
+    test('returns zero state in IDLE phase', () => {
+        const state = getTimerState();
+        expect(state.elapsedMs).toBe(0);
+        expect(state.progress).toBe(0);
+    });
+
+    test('returns correct elapsed time during WORK', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        window._setPerfTime(11000);
+        const state = getTimerState();
+        expect(state.elapsedMs).toBe(10000);
+    });
+
+    test('returns correct remaining time', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        window._setPerfTime(31000);
+        const state = getTimerState();
+        expect(state.remainingMs).toBe(30000);
+    });
+
+    test('clamps remaining to minimum 0', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        window._setPerfTime(1000000);
+        const state = getTimerState();
+        expect(state.remainingMs).toBe(0);
+    });
+
+    test('progress approaches 1 as timer finishes', () => {
+        document.getElementById('work-time').value = '1';
+        window._setPerfTime(1000);
+        startWork();
+        stopAnimationLoop();
+        window._setPerfTime(61000);
+        const state = getTimerState();
+        expect(state.progress).toBeCloseTo(1, 3);
     });
 });

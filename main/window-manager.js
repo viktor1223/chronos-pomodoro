@@ -7,7 +7,6 @@ const { BrowserWindow, screen, Notification } = require('electron');
 const path = require('path');
 
 let mainWindow;
-let isWorkMode = true;
 
 function getMainWindow() {
     return mainWindow;
@@ -42,10 +41,7 @@ function createWindow() {
     mainWindow.loadFile(path.join(__dirname, '..', 'renderer', 'index.html'));
 
     // Position bottom-right for work mode
-    mainWindow.setPosition(
-        screenWidth - 340,
-        screenHeight - 440
-    );
+    mainWindow.setPosition(screenWidth - 340, screenHeight - 440);
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -68,7 +64,6 @@ function enterWorkMode() {
     mainWindow.setVibrancy(null);
     mainWindow.setHasShadow(false);
     mainWindow.setBackgroundColor('#00000000');
-    isWorkMode = true;
 }
 
 function enterRestMode() {
@@ -78,7 +73,6 @@ function enterRestMode() {
     mainWindow.setFullScreen(true);
     mainWindow.focus();
     mainWindow.setVisibleOnAllWorkspaces(true);
-    isWorkMode = false;
 }
 
 function workComplete() {

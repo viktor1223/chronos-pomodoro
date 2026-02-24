@@ -45,6 +45,13 @@ function startWork() {
     sessionQuote = null;
     document.body.classList.remove('paused');
 
+    // Persist settings for next launch
+    window.electronAPI.saveSettings({
+        workMinutes: workMinutes,
+        restMinutes: restMinutes,
+        logDir: logDir,
+    });
+
     durationMs = workMinutes * 60 * 1000;
     startTimestamp = performance.now();
     pausedAccumulatedMs = 0;
@@ -154,7 +161,7 @@ function resumeTimer() {
 }
 
 // ── Initialize ────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     // Initialize hourglass components — single source for all screens
     setupHourglass = new Hourglass('setup-hourglass', { size: 'sm' });
     workHourglass = new Hourglass('work-hourglass', { size: 'md', flow: true, glow: true });
@@ -164,6 +171,32 @@ document.addEventListener('DOMContentLoaded', function () {
     showWisdomWhisper();
     updateTimePreview();
     initVirtueSelector();
+
+    // Load persisted settings
+    try {
+        const settings = await window.electronAPI.getSettings();
+        if (settings) {
+            const workInput = document.getElementById('work-time');
+            const restInput = document.getElementById('rest-time');
+            const logDirInput = document.getElementById('log-dir');
+            if (workInput && settings.workMinutes) workInput.value = settings.workMinutes;
+            if (restInput && settings.restMinutes) restInput.value = settings.restMinutes;
+            if (logDirInput && settings.logDir) logDirInput.value = settings.logDir;
+            updateTimePreview();
+        }
+    } catch (e) {
+        console.log('Could not load settings:', e);
+    }
+
+    // Load session stats
+    try {
+        const stats = await window.electronAPI.getSettings();
+        if (stats && stats.sessionCount !== undefined) {
+            updateSessionStats(stats.sessionCount, stats.todayCount || 0);
+        }
+    } catch (e) {
+        console.log('Could not load session stats:', e);
+    }
 
     const workInput = document.getElementById('work-time');
     if (workInput) {
@@ -178,9 +211,36 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Keyboard shortcuts — Enter to start, Escape for context-sensitive navigation
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' && phase === Phase.IDLE) {
+            e.preventDefault();
+            startWork();
+        }
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            if (phase === Phase.WORK || phase === Phase.REST) {
+                returnToSetup();
+            } else if (phase === Phase.ALERT) {
+                startRest();
+            } else if (phase === Phase.REFLECT) {
+                skipReflection();
+            } else if (phase === Phase.COMPLETE) {
+                returnToSetup();
+            }
+        }
+    });
+
+    // Tray stop command
+    window.electronAPI.onTrayStop(function () {
+        if (phase === Phase.WORK || phase === Phase.REST) {
+            returnToSetup();
+        }
+    });
+
     // Pause/resume — click hourglass
-    var workHg = document.getElementById('work-hourglass');
+    let workHg = document.getElementById('work-hourglass');
     if (workHg) workHg.addEventListener('click', togglePause);
-    var restHg = document.getElementById('rest-hourglass');
+    let restHg = document.getElementById('rest-hourglass');
     if (restHg) restHg.addEventListener('click', togglePause);
 });

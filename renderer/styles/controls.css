@@ -93,7 +93,7 @@
     margin-top: 8px;
     padding: 10px 36px;
     background: transparent;
-    border: 0.5px solid rgba(198, 168, 107, 0.30);
+    border: 0.5px solid rgba(198, 168, 107, 0.3);
     border-radius: 50px;
     color: var(--text-gold);
     font-family: var(--font-ui);
@@ -137,7 +137,7 @@
 
 .btn-rest:hover {
     background: rgba(198, 168, 107, 0.06);
-    border-color: rgba(198, 168, 107, 0.40);
+    border-color: rgba(198, 168, 107, 0.4);
     box-shadow: 0 0 20px rgba(198, 168, 107, 0.06);
     transform: translateY(-1px);
 }

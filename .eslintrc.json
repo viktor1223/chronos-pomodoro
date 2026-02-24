@@ -1,0 +1,126 @@
+{
+    "env": {
+        "browser": true,
+        "node": true,
+        "es2022": true,
+        "jest": true
+    },
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2022,
+        "sourceType": "script"
+    },
+    "rules": {
+        "no-unused-vars": [
+            "warn",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }
+        ],
+        "no-console": "off",
+        "prefer-const": "warn",
+        "eqeqeq": [
+            "error",
+            "always"
+        ],
+        "curly": [
+            "warn",
+            "multi-line"
+        ],
+        "no-var": "warn"
+    },
+    "overrides": [
+        {
+            "files": [
+                "renderer/**/*.js"
+            ],
+            "env": {
+                "browser": true,
+                "node": false
+            },
+            "rules": {
+                "no-redeclare": "off",
+                "no-unused-vars": "off",
+                "prefer-const": "off"
+            },
+            "globals": {
+                "Hourglass": "readonly",
+                "Phase": "readonly",
+                "quotes": "readonly",
+                "whispers": "readonly",
+                "showScreen": "readonly",
+                "toggleSettings": "readonly",
+                "updateTimePreview": "readonly",
+                "adjustTime": "readonly",
+                "getTimerState": "readonly",
+                "animationLoop": "readonly",
+                "startAnimationLoop": "readonly",
+                "stopAnimationLoop": "readonly",
+                "onPhaseComplete": "readonly",
+                "startWork": "readonly",
+                "startRest": "readonly",
+                "updateRestDisplay": "readonly",
+                "updateSand": "readonly",
+                "createParticles": "readonly",
+                "resetSand": "readonly",
+                "returnToSetup": "readonly",
+                "stopTimer": "readonly",
+                "initVirtueSelector": "readonly",
+                "browseLogDir": "readonly",
+                "saveReflectionAndFinish": "readonly",
+                "skipReflection": "readonly",
+                "clearReflectForm": "readonly",
+                "showWisdomWhisper": "readonly",
+                "playChime": "readonly",
+                "playRestComplete": "readonly",
+                "getSessionQuote": "readonly",
+                "updateDebugOverlay": "readonly",
+                "togglePause": "readonly",
+                "pauseTimer": "readonly",
+                "resumeTimer": "readonly",
+                "setAudioMuted": "readonly",
+                "isAudioMuted": "readonly",
+                "updateSessionStats": "readonly",
+                "phase": "writable",
+                "durationMs": "writable",
+                "workMinutes": "writable",
+                "restMinutes": "writable",
+                "logDir": "writable",
+                "sessionStartTime": "writable",
+                "sessionQuote": "writable",
+                "startTimestamp": "writable",
+                "pausedAccumulatedMs": "writable",
+                "pauseStartedAt": "writable",
+                "animFrameId": "writable",
+                "animatedProgress": "writable",
+                "lastFrameTime": "writable",
+                "frameCount": "writable",
+                "fpsAccum": "writable",
+                "currentFps": "writable",
+                "debugVisible": "writable",
+                "settingsOpen": "writable",
+                "virtueRatings": "writable",
+                "virtueKeys": "writable",
+                "workHourglass": "writable",
+                "restHourglass": "writable",
+                "setupHourglass": "writable"
+            }
+        },
+        {
+            "files": [
+                "tests/**/*.js"
+            ],
+            "env": {
+                "jest": true,
+                "node": true
+            },
+            "rules": {
+                "no-undef": "off"
+            }
+        }
+    ]
+}

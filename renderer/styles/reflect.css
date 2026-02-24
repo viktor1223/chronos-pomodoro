@@ -4,10 +4,12 @@
    ═══════════════════════════════════════════════════════ */
 
 #reflect-screen {
-    background: radial-gradient(ellipse at 50% 35%,
-            rgba(22, 20, 16, 0.97) 0%,
-            rgba(10, 8, 6, 0.99) 60%,
-            rgba(3, 2, 1, 1) 100%);
+    background: radial-gradient(
+        ellipse at 50% 35%,
+        rgba(22, 20, 16, 0.97) 0%,
+        rgba(10, 8, 6, 0.99) 60%,
+        rgba(3, 2, 1, 1) 100%
+    );
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
@@ -167,7 +169,7 @@
 
 .virtue-dot:hover {
     background: rgba(198, 168, 107, 0.08);
-    border-color: rgba(198, 168, 107, 0.20);
+    border-color: rgba(198, 168, 107, 0.2);
     color: var(--text-gold);
 }
 

@@ -10,4 +10,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     returnToSetup: () => ipcRenderer.send('return-to-setup'),
     selectLogDir: () => ipcRenderer.invoke('select-log-dir'),
     saveReflection: (data) => ipcRenderer.invoke('save-reflection', data),
+    getSettings: () => ipcRenderer.invoke('get-settings'),
+    saveSettings: (settings) => ipcRenderer.send('save-settings', settings),
+    incrementSession: () => ipcRenderer.invoke('increment-session'),
+    trayTimerUpdate: (data) => ipcRenderer.send('tray-timer-update', data),
+    onTrayStop: (callback) => ipcRenderer.on('tray-stop', callback),
 });

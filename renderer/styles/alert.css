@@ -4,10 +4,12 @@
    ═══════════════════════════════════════════════════════ */
 
 #alert-screen {
-    background: radial-gradient(ellipse at 50% 40%,
-            rgba(24, 22, 18, 0.97) 0%,
-            rgba(12, 10, 8, 0.99) 55%,
-            rgba(4, 3, 2, 1) 100%);
+    background: radial-gradient(
+        ellipse at 50% 40%,
+        rgba(24, 22, 18, 0.97) 0%,
+        rgba(12, 10, 8, 0.99) 55%,
+        rgba(4, 3, 2, 1) 100%
+    );
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -91,8 +93,7 @@
     left: 15%;
     right: 15%;
     height: 0.5px;
-    background: linear-gradient(90deg,
-            transparent, rgba(198, 168, 107, 0.08), transparent);
+    background: linear-gradient(90deg, transparent, rgba(198, 168, 107, 0.08), transparent);
 }
 
 .laurel-wreath {
@@ -102,14 +103,13 @@
 }
 
 @keyframes laurelGlow {
-
     0%,
     100% {
         filter: drop-shadow(0 0 4px rgba(198, 168, 107, 0.04));
     }
 
     50% {
-        filter: drop-shadow(0 0 10px rgba(198, 168, 107, 0.10));
+        filter: drop-shadow(0 0 10px rgba(198, 168, 107, 0.1));
     }
 }
 
@@ -144,7 +144,7 @@
     font-style: italic;
     font-size: 14px;
     line-height: 1.8;
-    color: rgba(255, 255, 255, 0.30);
+    color: rgba(255, 255, 255, 0.3);
     margin-bottom: 6px;
 }
 

@@ -43,34 +43,38 @@ class Hourglass {
     static SAND_TOP = 14;
     static SAND_NECK = 58;
     static SAND_BOTTOM = 106;
-    static SAND_HEIGHT = 44;   // 58 - 14 or 106 - 62
+    static SAND_HEIGHT = 44; // 58 - 14 or 106 - 62
     static SAND_LEFT = 22;
     static SAND_RIGHT = 58;
-    static SAND_CX = 40;   // center x
-    static MAX_CURVE = 12;   // max bezier depth for funnel/mound
+    static SAND_CX = 40; // center x
+    static MAX_CURVE = 12; // max bezier depth for funnel/mound
 
     /* ── Internal: Top sand path (concave funnel) ──── */
     // As sand drains, center drops first through the neck,
     // edges retain sand longer — creates a funnel / crater shape.
     _topSandPath(p) {
-        var remaining = Hourglass.SAND_HEIGHT * (1 - p);
+        let remaining = Hourglass.SAND_HEIGHT * (1 - p);
         if (remaining < 0.5) return 'M22 58 L58 58 Z'; // empty — degenerate line
 
-        var edgeY = Hourglass.SAND_TOP + p * Hourglass.SAND_HEIGHT;
+        let edgeY = Hourglass.SAND_TOP + p * Hourglass.SAND_HEIGHT;
 
         // Funnel curvature: ramps up quickly, fades near empty
-        var curve = Hourglass.MAX_CURVE
-            * Math.min(p * 2.5, 1)
-            * Math.min((1 - p) * 4, 1);
+        let curve = Hourglass.MAX_CURVE * Math.min(p * 2.5, 1) * Math.min((1 - p) * 4, 1);
 
         // Clamp so the curve never dips below the neck
         curve = Math.min(curve, Math.max(0, Hourglass.SAND_NECK - 1 - edgeY));
 
-        var centerY = edgeY + curve;
+        let centerY = edgeY + curve;
 
-        return 'M22 ' + edgeY.toFixed(1) +
-            ' Q40 ' + centerY.toFixed(1) + ' 58 ' + edgeY.toFixed(1) +
-            ' L58 58 L22 58 Z';
+        return (
+            'M22 ' +
+            edgeY.toFixed(1) +
+            ' Q40 ' +
+            centerY.toFixed(1) +
+            ' 58 ' +
+            edgeY.toFixed(1) +
+            ' L58 58 L22 58 Z'
+        );
     }
 
     /* ── Internal: Bottom sand path (convex mound) ─── */
@@ -79,30 +83,34 @@ class Hourglass {
     _bottomSandPath(p) {
         if (p < 0.01) return 'M22 106 L58 106 Z'; // empty — degenerate line
 
-        var sandHeight = Hourglass.SAND_HEIGHT * p;
-        var edgeY = Hourglass.SAND_BOTTOM - sandHeight;
+        let sandHeight = Hourglass.SAND_HEIGHT * p;
+        let edgeY = Hourglass.SAND_BOTTOM - sandHeight;
 
         // Mound curvature: builds quickly, flattens as bulb fills
-        var curve = Hourglass.MAX_CURVE
-            * Math.min(p * 4, 1)
-            * Math.min((1 - p) * 2.5, 1);
+        let curve = Hourglass.MAX_CURVE * Math.min(p * 4, 1) * Math.min((1 - p) * 2.5, 1);
 
         // Clamp so the mound never rises above the bulb neck
         curve = Math.min(curve, Math.max(0, edgeY - 63));
 
-        var centerY = edgeY - curve;
+        let centerY = edgeY - curve;
 
-        return 'M22 ' + edgeY.toFixed(1) +
-            ' Q40 ' + centerY.toFixed(1) + ' 58 ' + edgeY.toFixed(1) +
-            ' L58 106 L22 106 Z';
+        return (
+            'M22 ' +
+            edgeY.toFixed(1) +
+            ' Q40 ' +
+            centerY.toFixed(1) +
+            ' 58 ' +
+            edgeY.toFixed(1) +
+            ' L58 106 L22 106 Z'
+        );
     }
 
     /* ── Internal: Build and inject SVG ────────────── */
     _render() {
-        var wrap = document.createElement('div');
+        let wrap = document.createElement('div');
         wrap.className = 'hourglass-wrap hourglass--' + this.size;
 
-        var svg = '<svg viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">';
+        let svg = '<svg viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg">';
 
         // Defs — clip paths for sand (only when flow enabled)
         if (this.flow) {
@@ -139,7 +147,8 @@ class Hourglass {
             svg += '<line data-role="stream" x1="40" y1="58" x2="40" y2="62" ';
             svg += 'stroke="rgba(198,168,107,0.30)" stroke-width="0.8" ';
             svg += 'stroke-dasharray="1.5,3" stroke-linecap="round">';
-            svg += '<animate attributeName="stroke-dashoffset" values="0;4.5" dur="0.8s" repeatCount="indefinite"/>';
+            svg +=
+                '<animate attributeName="stroke-dashoffset" values="0;4.5" dur="0.8s" repeatCount="indefinite"/>';
             svg += '</line>';
 
             // Bottom sand — path with convex mound surface
@@ -153,7 +162,7 @@ class Hourglass {
 
         // Glow — radial ambient light behind the hourglass
         if (this.glow) {
-            var glowEl = document.createElement('div');
+            let glowEl = document.createElement('div');
             glowEl.className = 'hourglass-glow';
             wrap.appendChild(glowEl);
         }
@@ -171,7 +180,7 @@ class Hourglass {
     /* ── Public: Update sand position ──────────────── */
     updateSand(progress) {
         if (!this.flow) return;
-        var p = Math.max(0, Math.min(1, progress));
+        let p = Math.max(0, Math.min(1, progress));
 
         if (this.topSand) {
             this.topSand.setAttribute('d', this._topSandPath(p));

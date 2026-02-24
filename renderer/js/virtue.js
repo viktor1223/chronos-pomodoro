@@ -9,7 +9,9 @@ const virtueRatings = {};
 function initVirtueSelector() {
     const container = document.getElementById('virtue-selector');
     if (!container) return;
-    virtueKeys.forEach(function (k) { virtueRatings[k] = 0; });
+    virtueKeys.forEach(function (k) {
+        virtueRatings[k] = 0;
+    });
     container.querySelectorAll('.virtue-dot').forEach(function (dot) {
         dot.addEventListener('click', function () {
             const virtue = dot.dataset.virtue;

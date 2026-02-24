@@ -38,9 +38,9 @@ describe('Preload — API Registration', () => {
         expect(apiName).toBe('electronAPI');
     });
 
-    test('API object has exactly 9 methods', () => {
+    test('API object has exactly 14 methods', () => {
         const methods = Object.keys(api);
-        expect(methods.length).toBe(9);
+        expect(methods.length).toBe(14);
     });
 });
 
